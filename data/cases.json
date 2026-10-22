@@ -1,0 +1,44 @@
+{
+  "cases": [
+    {
+      "id": "CASE_001",
+      "title": "CASE 001 — THE VANISHING FILE",
+      "tagline": "A confidential CRISPR-AI research file has vanished from the University Bio-Informatics Vault.",
+      "incident_time": "19:00 - 21:00",
+      "incident_date": "October 6, 2026",
+      "location": "Apex Bio-Informatics Lab, University Central Research Facility",
+      "victim": {
+        "id": "maya_rao",
+        "name": "Dr. Maya Rao",
+        "role": "Principal Investigator & Genome Scientist",
+        "statement": "I stepped out of the lab at 19:30 to grab coffee in the cafeteria. When I returned at 20:45, my workstation was unlocked, and 'PROJECT_CHIMERA_GENOME.enc' was completely purged from the local encrypted drive."
+      },
+      "culprit_id": "ryan_mehta",
+      "accomplice_id": "sam_verma",
+      "motive": "Financial payoff and corporate espionage. Ryan was promised $150,000 in cryptocurrency by rival biotech firm NexaGen to deliver the Chimera sequencing algorithm.",
+      "method": "Ryan obtained Maya's physical keycard when she briefly left her desk at 19:30. Using lab terminal #04 at 19:42, he executed a custom data exfiltration script onto an encrypted USB drive, aided by an SSH jump-box configured by Sam Verma.",
+      "opportunity": "Ryan claimed to be studying at Central Library between 19:10 and 20:30. However, CCTV Camera 04 recorded a hooded figure matching his jacket exiting the rear lab fire stairs at 19:47, and network router logs show the SSH connection routed from the library terminal directly to the lab subnet.",
+      "solution_summary": {
+        "culprit": "Ryan Mehta",
+        "key_evidence_ids": [1047, 1061, 1075, 1120, 1160],
+        "smoking_gun": "CCTV Footage #1047 (matching Ryan's navy jacket at fire escape at 19:47) combined with Terminal Log #1061 (exfiltration at 19:42) and Encrypted Chat #1120 between Ryan and Sam discussing the payload payout.",
+        "shortest_path_to_victim": ["maya_rao", "ryan_mehta"],
+        "accomplice_link": "Sam Verma provided the SSH bypass script in exchange for 20% of the crypto bounty."
+      },
+      "red_herrings": [
+        {
+          "suspect_id": "arjun_kulkarni",
+          "reason": "Arjun had a heated argument with Dr. Maya regarding authorship earlier, but was having coffee with Nisha Kapoor at Costa Cafe from 19:15 to 20:30 (verified by Cafe CCTV #1035 and receipts)."
+        },
+        {
+          "suspect_id": "aisha_shah",
+          "reason": "Aisha holds root administrative keys and accessed the project directory the day before, but cryptographic server logs show no modifications during the 19:00-21:00 window."
+        },
+        {
+          "suspect_id": "dev_malhotra",
+          "reason": "Dev triggered a security alert at Server Room B at 20:10, but logs prove he was investigating an unannounced network power surge caused by Sam's proxy router."
+        }
+      ]
+    }
+  ]
+}

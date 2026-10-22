@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Social Detective — Every Connection Is Evidence{% endblock %}</title>
+  
+  <!-- Modern Typography (Google Fonts: Outfit, Inter, JetBrains Mono) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700;800&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/animations.css') }}">
+</head>
+<body>
+
+  <!-- Top Status Bar & Header -->
+  <header class="app-header">
+    <div class="header-top-bar">
+      <div class="brand-section">
+        <a href="/" class="brand-logo" title="Return to Home Briefing">
+          <span class="brand-icon">🕵️‍♂️</span>
+          <span class="brand-name">SOCIAL DETECTIVE</span>
+          <span class="brand-badge">DSA 2.0</span>
+        </a>
+        <div class="case-pill" title="Active Investigation Dossier">
+          <span class="status-dot"></span>
+          <span>CASE #001 · THE VANISHING FILE</span>
+        </div>
+      </div>
+
+      <div class="header-controls">
+        <!-- Quick Global Hash Search -->
+        <div class="global-search-box" title="Search Hash Table (O(1)) for suspects, evidence IDs, or keycards">
+          <input type="text" id="globalSearchInput" placeholder="Hash search (@user, #1047, KC)...">
+          <button onclick="executeGlobalSearch()" title="Execute O(1) Hash Table Lookup">🔍</button>
+        </div>
+
+        <div class="score-badge" title="Investigation Score (Max 1000 pts)">
+          <span class="score-label">🏆 SCORE:</span>
+          <span id="headerScoreValue" class="score-val">{{ summary.score if summary and summary.score else 450 }}</span>
+        </div>
+
+        <div class="progress-container" title="Case Investigation Progress">
+          <span class="prog-label">PROG:</span>
+          <div class="progress-bar-bg">
+            <div class="progress-bar-fill" style="width: {{ summary.progress_pct if summary else 0 }}%;"></div>
+          </div>
+          <span class="prog-pct">{{ summary.progress_pct if summary else 0 }}%</span>
+        </div>
+
+        <button class="btn-header-tool btn-how-to-play" onclick="openHowToPlayModal()" title="How To Play & Game Overview">
+          <span>❓</span> Guide
+        </button>
+
+        <button class="btn-header-tool btn-reset-tool" onclick="confirmResetCase()" title="Reset Investigation to Beginning">
+          <span>🔄</span> Reset
+        </button>
+
+        <button class="btn-header-tool" onclick="togglePresentationMode()" title="Toggle College Viva / Presentation Mode">
+          <span>🎓</span> Viva
+        </button>
+
+        <button class="btn-header-tool btn-sound-tool" id="soundToggleBtn" onclick="SoundEffects.enabled = !SoundEffects.enabled; this.classList.toggle('muted', !SoundEffects.enabled);" title="Toggle Audio Synthesizer">
+          <span id="soundIcon">🔊</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Main Navigation Bar with Primary & Specialized Tabs -->
+    <nav class="main-nav-bar">
+      <a href="/case" class="nav-link {% if request.path == '/case' %}active{% endif %}">
+        <span class="nav-icon">🕵️‍♂️</span> PLAYTHROUGH
+      </a>
+      <a href="/case-board" class="nav-link {% if request.path == '/case-board' %}active{% endif %}">
+        <span class="nav-icon">📋</span> CASE BOARD
+      </a>
+
+      <!-- Tools Nav Links -->
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-btn {% if request.path in ['/suspects', '/network', '/evidence', '/timeline', '/investigation'] %}active{% endif %}">
+          <span class="nav-icon">🛠️</span> INVESTIGATION TOOLS <span class="caret">▾</span>
+        </button>
+        <div class="nav-dropdown-menu">
+          <a href="/suspects" class="dropdown-item {% if request.path == '/suspects' %}active{% endif %}">
+            <span>👥</span> Suspects Roster <span class="menu-dsa">Hash Table / Sort</span>
+          </a>
+          <a href="/network" class="dropdown-item {% if request.path == '/network' %}active{% endif %}">
+            <span>🕸️</span> Social Graph Explorer <span class="menu-dsa">Graph BFS / DFS</span>
+          </a>
+          <a href="/evidence" class="dropdown-item {% if request.path == '/evidence' %}active{% endif %}">
+            <span>🔬</span> Forensic Evidence Vault <span class="menu-dsa">BST / Max-Heap</span>
+          </a>
+          <a href="/timeline" class="dropdown-item {% if request.path == '/timeline' %}active{% endif %}">
+            <span>⏳</span> Incident Timeline <span class="menu-dsa">Doubly Linked List</span>
+          </a>
+          <a href="/investigation" class="dropdown-item {% if request.path == '/investigation' %}active{% endif %}">
+            <span>📹</span> Live Theory & CCTV <span class="menu-dsa">Stack / Circular Queue</span>
+          </a>
+          <div style="border-top: 1px solid var(--border-subtle); margin: 0.25rem 0;"></div>
+          <a href="/download-report" class="dropdown-item" style="color: var(--accent-purple);">
+            <span>📄</span> Project Report (PDF) <span class="menu-dsa">Viva Docs</span>
+          </a>
+        </div>
+      </div>
+
+      <a href="/algorithm-lab" class="nav-link nav-viva-tab {% if request.path == '/algorithm-lab' %}active{% endif %}">
+        <span class="nav-icon">⚡</span> DSA VIVA LAB <span class="nav-dsa-tag">12 Algorithms</span>
+      </a>
+    </nav>
+  </header>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Global "How to Play" Modal -->
+  <div class="modal-overlay" id="howToPlayModal">
+    <div class="modal-content how-to-play-modal-content">
+      <button class="modal-close" onclick="closeHowToPlayModal()">&times;</button>
+      
+      <div class="how-modal-header">
+        <div style="display:flex; align-items:center; gap:0.6rem;">
+          <span style="font-size:1.6rem;">🕵️‍♂️</span>
+          <div>
+            <h2 style="color:var(--text-primary); font-size:1.35rem; font-weight:800;">HOW TO PLAY SOCIAL DETECTIVE</h2>
+            <div style="font-family:var(--text-mono); font-size:0.75rem; color:var(--accent-cyan);">A Cyber Mystery Powered 100% by Authentic Data Structures & Algorithms</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="how-modal-tabs">
+        <button class="how-tab-btn active" onclick="switchHowTab(0)">🎯 The Case & Goal</button>
+        <button class="how-tab-btn" onclick="switchHowTab(1)">🚶‍♂️ 6 Step-by-Step Stages</button>
+        <button class="how-tab-btn" onclick="switchHowTab(2)">⚡ DSA Mechanics</button>
+      </div>
+
+      <div class="how-modal-body">
+        <!-- Tab 0: Case Goal -->
+        <div class="how-tab-content active" id="howTab0">
+          <div class="guide-card">
+            <h4 style="color:var(--accent-blue); font-size:1rem; margin-bottom:0.4rem;">The Mystery (Case 001)</h4>
+            <p style="color:var(--text-secondary); font-size:0.9rem; line-height:1.6;">
+              At <strong>19:42 PM</strong>, the confidential genomic research file <code>PROJECT_CHIMERA_GENOME.enc</code> was stolen from Dr. Maya Rao's workstation in the Apex Bio-Informatics Lab and purged from the database.
+            </p>
+          </div>
+
+          <div class="guide-grid">
+            <div class="guide-mini-card">
+              <div class="guide-icon">🔍</div>
+              <div class="guide-title">1. Find The Contradiction</div>
+              <p class="guide-desc">Inspect suspect statements and cross-reference keycard timestamps with verified cafeteria alibis.</p>
+            </div>
+            <div class="guide-mini-card">
+              <div class="guide-icon">🕸️</div>
+              <div class="guide-title">2. Trace Network Hops</div>
+              <p class="guide-desc">Find who is secretly connected to the victim and sysadmin across the social relationship graph.</p>
+            </div>
+            <div class="guide-mini-card">
+              <div class="guide-icon">⚖️</div>
+              <div class="guide-title">3. Accuse The Culprit</div>
+              <p class="guide-desc">Back up your theory with forensic evidence (#1047, #1061, #1075) to close the case with maximum score!</p>
+            </div>
+          </div>
+
+          <div style="text-align:center; margin-top:1.25rem;">
+            <a href="/case" class="btn btn-primary" onclick="closeHowToPlayModal()" style="padding:0.75rem 2rem;">
+              START PLAYTHROUGH NOW →
+            </a>
+          </div>
+        </div>
+
+        <!-- Tab 1: Stages -->
+        <div class="how-tab-content" id="howTab1">
+          <div class="stages-walkthrough-list">
+            <div class="stage-walkthrough-item">
+              <span class="stage-num-badge">0</span>
+              <div>
+                <strong>The Briefing:</strong> Understand the crime — at 19:42 PM, genomic file <code>PROJECT_CHIMERA_GENOME.enc</code> was stolen from Workstation 04 while Dr. Maya stepped out to dinner.
+              </div>
+            </div>
+            <div class="stage-walkthrough-item">
+              <span class="stage-num-badge">1</span>
+              <div>
+                <strong>Check Suspects (Hash Table O(1)):</strong> Inspect suspect profiles. Unmask Ryan Mehta — he claims he was at the library, but his badge was active on campus!
+              </div>
+            </div>
+            <div class="stage-walkthrough-item">
+              <span class="stage-num-badge">2</span>
+              <div>
+                <strong>Trace Connections (Graph BFS):</strong> Run Breadth-First Search to reveal the shortest conspiracy link: Maya Rao ➔ Sam Verma (SysAdmin) ➔ Ryan Mehta.
+              </div>
+            </div>
+            <div class="stage-walkthrough-item">
+              <span class="stage-num-badge">3</span>
+              <div>
+                <strong>Reconstruct Timeline (Doubly Linked List):</strong> Step forward/backward to link Door #3 unlock at 19:38 to Terminal 04 file deletion at 19:42.
+              </div>
+            </div>
+            <div class="stage-walkthrough-item">
+              <span class="stage-num-badge">4</span>
+              <div>
+                <strong>Evidence Vault (BST & Max-Heap):</strong> Search BST for Clue #1047 (stairwell CCTV) in O(log n) time, and extract Max-Heap top clues (#1061 SSH logs).
+              </div>
+            </div>
+            <div class="stage-walkthrough-item">
+              <span class="stage-num-badge">5</span>
+              <div>
+                <strong>Theory Board (Stack Undo):</strong> Clear Dr. Maya Rao, classify Ryan Mehta as CRITICAL suspect, with instant LIFO Stack undo.
+              </div>
+            </div>
+            <div class="stage-walkthrough-item">
+              <span class="stage-num-badge">6</span>
+              <div>
+                <strong>Accusation & Verdict:</strong> Submit formal indictment against Ryan Mehta to expose the $150k corporate bounty and achieve 100% case victory!
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 2: DSA Table -->
+        <div class="how-tab-content" id="howTab2">
+          <p style="font-size:0.85rem; color:var(--text-secondary); margin-bottom:0.75rem;">
+            Every single button and action in Social Detective runs real custom Python data structures in the backend:
+          </p>
+          <div class="dsa-quick-table-wrap">
+            <table class="dsa-quick-table">
+              <thead>
+                <tr>
+                  <th>Data Structure</th>
+                  <th>Complexity</th>
+                  <th>Game Mechanic</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Graph (Adjacency List)</strong></td>
+                  <td><code>O(V + E)</code></td>
+                  <td>Suspect relationships & BFS shortest path tracing</td>
+                </tr>
+                <tr>
+                  <td><strong>Doubly Linked List</strong></td>
+                  <td><code>O(1) step</code></td>
+                  <td>Forward & backward case timeline traversal</td>
+                </tr>
+                <tr>
+                  <td><strong>Binary Search Tree</strong></td>
+                  <td><code>O(log n)</code></td>
+                  <td>Evidence ID indexing & sorted Inorder traversal</td>
+                </tr>
+                <tr>
+                  <td><strong>Max-Heap</strong></td>
+                  <td><code>O(log n)</code></td>
+                  <td>Surfacing highest-credibility forensic clues first</td>
+                </tr>
+                <tr>
+                  <td><strong>LIFO Stack</strong></td>
+                  <td><code>O(1)</code></td>
+                  <td>Investigation navigation history & Backtrack (Pop)</td>
+                </tr>
+                <tr>
+                  <td><strong>Circular Queue</strong></td>
+                  <td><code>O(1)</code></td>
+                  <td>Rotating CCTV camera surveillance monitors</td>
+                </tr>
+                <tr>
+                  <td><strong>Hash Table</strong></td>
+                  <td><code>O(1) avg</code></td>
+                  <td>Instant search for handles, IDs, and keycard codes</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Global Viva / Explain This Modal -->
+  <div class="modal-overlay" id="explainModal">
+    <div class="modal-content">
+      <button class="modal-close" id="modalCloseBtn">&times;</button>
+      <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:1rem;">
+        <span style="font-size:1.5rem;">🎓</span>
+        <h2 id="explainModalTitle" style="color:var(--accent-cyan); font-size:1.3rem;">Data Structure Explanation</h2>
+      </div>
+
+      <div style="background:var(--bg-inset); padding:0.75rem; border-radius:var(--radius-sm); border:1px solid var(--border-subtle); margin-bottom:1rem; font-family:var(--text-mono); font-size:0.8rem;">
+        <div>Implementation: <strong id="explainModalDSA" style="color:var(--text-primary);"></strong></div>
+        <div style="margin-top:4px;">Time Complexity: <strong id="explainModalTime" style="color:var(--accent-cyan);"></strong></div>
+        <div style="margin-top:2px;">Space Complexity: <strong id="explainModalSpace" style="color:var(--accent-purple);"></strong></div>
+      </div>
+
+      <div style="margin-bottom:1rem;">
+        <h4 style="color:var(--text-secondary); font-size:0.85rem; margin-bottom:0.3rem;">WHY ARE WE USING THIS IN SOCIAL DETECTIVE?</h4>
+        <p id="explainModalWhy" style="font-size:0.9rem; line-height:1.5; color:var(--text-primary);"></p>
+      </div>
+
+      <div style="background:rgba(180,83,9,0.1); border-left:3px solid var(--accent-amber); padding:0.75rem; border-radius:4px;">
+        <h4 style="color:var(--accent-amber); font-size:0.8rem; margin-bottom:0.2rem;">💡 VIVA / PRESENTATION TIP</h4>
+        <p id="explainModalTip" style="font-size:0.85rem; color:var(--text-primary);"></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Page Content Block -->
+  <main class="app-content">
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- Persistent Bottom DSA Operation Ticker -->
+  <footer class="operation-log-footer">
+    <div class="log-ticker-content" id="liveLogTicker">
+      <span class="log-type-tag">LIVE DSA ENGINE</span>
+      <span id="logTickerText">System initialized: Graph (13 nodes, 24 edges), Hash Table (Cap 13), BST index ready.</span>
+    </div>
+    <div style="display:flex; align-items:center; gap:0.5rem;">
+      <a href="/algorithm-lab" class="btn btn-outline btn-sm" style="font-size:0.7rem; padding:3px 10px;">
+        Open Algorithm Lab →
+      </a>
+    </div>
+  </footer>
+
+  <!-- Core Scripts -->
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+  <script>
+    function openHowToPlayModal() {
+      const modal = document.getElementById('howToPlayModal');
+      if (modal) {
+        modal.classList.add('active');
+        if (window.SoundEffects) SoundEffects.scan();
+      }
+    }
+
+    function closeHowToPlayModal() {
+      const modal = document.getElementById('howToPlayModal');
+      if (modal) modal.classList.remove('active');
+    }
+
+    function switchHowTab(tabIdx) {
+      const btns = document.querySelectorAll('.how-tab-btn');
+      const contents = document.querySelectorAll('.how-tab-content');
+      
+      btns.forEach((btn, idx) => {
+        btn.classList.toggle('active', idx === tabIdx);
+      });
+      contents.forEach((c, idx) => {
+        c.classList.toggle('active', idx === tabIdx);
+      });
+      if (window.SoundEffects) SoundEffects.click();
+    }
+  </script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>
+

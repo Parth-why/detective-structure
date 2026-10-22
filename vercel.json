@@ -1,0 +1,22 @@
+{
+  "functions": {
+    "api/index.py": {
+      "includeFiles": [
+        "templates/**",
+        "static/**",
+        "data/**",
+        "services/**",
+        "structures/**",
+        "*.py",
+        "*.json",
+        "Social_Detective_Project_Report.pdf"
+      ]
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/api/index"
+    }
+  ]
+}

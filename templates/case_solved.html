@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+
+{% block title %}Case 001 Solved — Social Detective Victory Debrief{% endblock %}
+
+{% block content %}
+<div style="display: flex; flex-direction: column; gap: 2rem; max-width: 880px; margin: 0 auto; padding-bottom: 3rem;">
+
+  <!-- Main Case Solved Card -->
+  <div class="card-panel" style="text-align: center; padding: 3rem 2rem; background: linear-gradient(180deg, var(--bg-surface) 0%, var(--bg-surface-elevated) 100%); border: 1px solid var(--border-primary); box-shadow: var(--shadow-md);">
+    
+    <div style="display: inline-flex; align-items: center; gap: 0.5rem; background: rgba(21, 128, 61, 0.12); border: 1px solid rgba(21, 128, 61, 0.3); padding: 0.35rem 1rem; border-radius: var(--radius-full); margin-bottom: 1rem;">
+      <span style="color: var(--accent-green); font-size: 1.1rem;">🏆</span>
+      <span style="font-family: var(--text-mono); font-size: 0.8rem; color: var(--accent-green); font-weight: 800; letter-spacing: 1px;">
+        INVESTIGATION CONCLUDED · CASE CLOSED
+      </span>
+    </div>
+
+    <h1 style="font-family: var(--font-main); font-size: 2.8rem; color: var(--text-primary); font-weight: 900; margin-bottom: 0.25rem;">
+      CASE SOLVED!
+    </h1>
+    <div style="font-size: 1.4rem; font-weight: 900; color: var(--accent-red); margin-bottom: 2rem; font-family: var(--text-mono);">
+      RYAN MEHTA WAS RESPONSIBLE (CONVICTED OF THE RESEARCH THEFT)
+    </div>
+
+    <!-- Chronological Deduction Sequence -->
+    <div style="background: var(--bg-inset); border: 1px solid var(--border-primary); border-radius: var(--radius-sm); padding: 1.75rem 2rem; text-align: left; margin-bottom: 2rem;">
+      <div style="font-family: var(--text-mono); font-size: 0.78rem; color: var(--accent-cyan); margin-bottom: 1.25rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;">
+        HOW THE THEFT UNFOLDED (CHRONOLOGICAL RECONSTRUCTION)
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 0.85rem;">
+        <div style="display: flex; align-items: baseline; gap: 1rem;">
+          <span style="font-family: var(--text-mono); font-weight: 800; color: var(--accent-cyan); width: 65px; font-size: 0.95rem;">19:30 PM</span>
+          <div>
+            <strong style="color: var(--text-primary);">Keycard KC-9021 Stolen:</strong>
+            <span style="color: var(--text-secondary);"> Dr. Maya Rao leaves her desk to visit the cafeteria; Ryan obtains her physical badge.</span>
+          </div>
+        </div>
+        <div style="color: var(--text-muted); margin-left: 24px;">↓</div>
+
+        <div style="display: flex; align-items: baseline; gap: 1rem;">
+          <span style="font-family: var(--text-mono); font-weight: 800; color: var(--accent-cyan); width: 65px; font-size: 0.95rem;">19:38 PM</span>
+          <div>
+            <strong style="color: var(--text-primary);">Door #3 Secure Lab Entry:</strong>
+            <span style="color: var(--text-secondary);"> Badge KC-9021 scans into the high-security terminal room while Maya is verified on cafeteria cameras.</span>
+          </div>
+        </div>
+        <div style="color: var(--text-muted); margin-left: 24px;">↓</div>
+
+        <div style="display: flex; align-items: baseline; gap: 1rem;">
+          <span style="font-family: var(--text-mono); font-weight: 800; color: var(--accent-cyan); width: 65px; font-size: 0.95rem;">19:42 PM</span>
+          <div>
+            <strong style="color: var(--text-primary);">Terminal 04 Exfiltration:</strong>
+            <span style="color: var(--text-secondary);"> Research file <code>PROJECT_CHIMERA_GENOME.enc</code> is copied via USB, assisted by Sam Verma's SSH jump-box.</span>
+          </div>
+        </div>
+        <div style="color: var(--text-muted); margin-left: 24px;">↓</div>
+
+        <div style="display: flex; align-items: baseline; gap: 1rem;">
+          <span style="font-family: var(--text-mono); font-weight: 800; color: var(--accent-cyan); width: 65px; font-size: 0.95rem;">19:47 PM</span>
+          <div>
+            <strong style="color: var(--text-primary);">Stairwell CCTV Exit:</strong>
+            <span style="color: var(--text-secondary);"> Camera #1047 captures hooded figure in navy jacket fleeing down emergency exit stairs.</span>
+          </div>
+        </div>
+        <div style="color: var(--text-muted); margin-left: 24px;">↓</div>
+
+        <div style="display: flex; align-items: baseline; gap: 1rem; border-top: 1px solid var(--border-subtle); padding-top: 0.85rem;">
+          <span style="font-family: var(--text-mono); font-weight: 800; color: var(--accent-green); width: 65px; font-size: 0.95rem;">VERDICT</span>
+          <div style="color: var(--accent-green); font-weight: 700;">
+            100% Case Solved. Ryan Mehta indicted for corporate espionage ($150,000 crypto payout). Sam Verma cited as accomplice.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Prominent Action Buttons -->
+    <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
+      <a href="/download-report" class="btn btn-purple" style="font-size: 1rem; padding: 0.85rem 2.25rem;">
+        <span>📄</span> DOWNLOAD PROJECT REPORT (PDF)
+      </a>
+      <a href="/case" class="btn btn-outline" style="font-size: 1rem; padding: 0.85rem 2.25rem;">
+        <span>🔄</span> REVIEW CASE PLAYTHROUGH
+      </a>
+      <a href="/algorithm-lab" class="btn btn-primary" style="font-size: 1rem; padding: 0.85rem 2.25rem;">
+        <span>⚡</span> EXPLORE DSA VIVA LAB →
+      </a>
+    </div>
+  </div>
+
+  <!-- Score & Academic Verification -->
+  <div class="card-panel">
+    <div class="card-header">
+      <div class="card-title">
+        <span>🎓</span> Data Structures & Algorithms Verified in Playthrough
+      </div>
+      <span class="dsa-badge" style="color: var(--accent-green); font-weight: 800; font-size: 0.85rem;">
+        {{ stats.score }} / 1000 PTS
+      </span>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 0.65rem; font-family: var(--text-mono); font-size: 0.8rem;">
+      <div style="background: var(--bg-inset); padding: 0.65rem 0.85rem; border-radius: var(--radius-xs); border: 1px solid var(--border-subtle); color: var(--accent-green);">
+        ✓ Hash Table (Chaining O(1))
+      </div>
+      <div style="background: var(--bg-inset); padding: 0.65rem 0.85rem; border-radius: var(--radius-xs); border: 1px solid var(--border-subtle); color: var(--accent-green);">
+        ✓ Graph Adjacency List O(V + E)
+      </div>
+      <div style="background: var(--bg-inset); padding: 0.65rem 0.85rem; border-radius: var(--radius-xs); border: 1px solid var(--border-subtle); color: var(--accent-green);">
+        ✓ BFS Shortest Path Tracing
+      </div>
+      <div style="background: var(--bg-inset); padding: 0.65rem 0.85rem; border-radius: var(--radius-xs); border: 1px solid var(--border-subtle); color: var(--accent-green);">
+        ✓ DFS Deep Conspiracy Tree
+      </div>
+      <div style="background: var(--bg-inset); padding: 0.65rem 0.85rem; border-radius: var(--radius-xs); border: 1px solid var(--border-subtle); color: var(--accent-green);">
+        ✓ Doubly Linked List Timeline
+      </div>
+      <div style="background: var(--bg-inset); padding: 0.65rem 0.85rem; border-radius: var(--radius-xs); border: 1px solid var(--border-subtle); color: var(--accent-green);">
+        ✓ Singly Linked List Clue Chain
+      </div>
+      <div style="background: var(--bg-inset); padding: 0.65rem 0.85rem; border-radius: var(--radius-xs); border: 1px solid var(--border-subtle); color: var(--accent-green);">
+        ✓ Binary Search Tree (BST O(log n))
+      </div>
+      <div style="background: var(--bg-inset); padding: 0.65rem 0.85rem; border-radius: var(--radius-xs); border: 1px solid var(--border-subtle); color: var(--accent-green);">
+        ✓ Max-Heap Priority Queue
+      </div>
+      <div style="background: var(--bg-inset); padding: 0.65rem 0.85rem; border-radius: var(--radius-xs); border: 1px solid var(--border-subtle); color: var(--accent-green);">
+        ✓ LIFO Stack Backtracking
+      </div>
+      <div style="background: var(--bg-inset); padding: 0.65rem 0.85rem; border-radius: var(--radius-xs); border: 1px solid var(--border-subtle); color: var(--accent-green);">
+        ✓ Circular Queue Surveillance
+      </div>
+      <div style="background: var(--bg-inset); padding: 0.65rem 0.85rem; border-radius: var(--radius-xs); border: 1px solid var(--border-subtle); color: var(--accent-green);">
+        ✓ Merge Sort & Quick Sort
+      </div>
+      <div style="background: var(--bg-inset); padding: 0.65rem 0.85rem; border-radius: var(--radius-xs); border: 1px solid var(--border-subtle); color: var(--accent-green);">
+        ✓ Binary Search on Sorted Clues
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}

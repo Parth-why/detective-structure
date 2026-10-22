@@ -1,0 +1,325 @@
+{% extends "base.html" %}
+
+{% block title %}Algorithm Lab — Social Detective Academic Viva Demo{% endblock %}
+
+{% block content %}
+<div style="display: flex; flex-direction: column; gap: 2rem;">
+
+  <!-- Header Banner -->
+  <div class="card-panel glow-purple" style="border-color: rgba(189, 0, 255, 0.4);">
+    <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem;">
+      <div>
+        <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.35rem;">
+          <span class="dsa-badge" style="color: var(--accent-purple); border-color: rgba(189, 0, 255, 0.4);">ACADEMIC VIVA ENGINE</span>
+          <span style="font-family: var(--text-mono); color: var(--text-muted); font-size: 0.75rem;">12 CUSTOM PYTHON DATA STRUCTURES & ALGORITHMS</span>
+        </div>
+        <h1 style="font-family: var(--font-main); font-size: 2rem; color: var(--text-primary); font-weight: 800; margin-bottom: 0.25rem;">
+          THE ALGORITHM LAB
+        </h1>
+        <p style="color: var(--text-secondary); font-size: 0.95rem; max-width: 850px; line-height: 1.6;">
+          <strong>Inspect the authentic computational machinery powering Social Detective.</strong> Execute live operations, inspect Big-O time and space complexities, observe internal pointer mutations, and prepare for college viva presentations with 1-click concept explanations.
+        </p>
+      </div>
+
+      <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+        <a href="/download-report" class="btn btn-purple" title="Download comprehensive 4-page academic project summary PDF">
+          <span>📄</span> Download Report (PDF)
+        </a>
+        <button class="btn btn-outline" onclick="togglePresentationMode()">
+          <span>🎓</span> Presentation Mode
+        </button>
+        <a href="/case" class="btn btn-primary">
+          <span>🕵️‍♂️</span> Return to Case →
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 12 DSA Cards Grid -->
+  <div class="algo-lab-grid">
+
+    <!-- 1. HASH TABLE -->
+    <div class="algo-card">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h3 style="color: var(--accent-cyan); font-size: 1.15rem; font-weight: 800;">1. Hash Table</h3>
+        <button class="btn btn-outline btn-sm" onclick="openExplainModal('hash_table')">Viva 🎓</button>
+      </div>
+      <table class="complexity-table">
+        <tr><td>Search (Avg / Worst):</td><td class="val">O(1) / O(n)</td></tr>
+        <tr><td>Insert / Delete:</td><td class="val">O(1)</td></tr>
+        <tr><td>Collision Strategy:</td><td class="val">Separate Chaining</td></tr>
+      </table>
+      <div style="font-size: 0.82rem; color: var(--text-secondary);">
+        <strong>Game Usage:</strong> Fast O(1) queries for usernames, Evidence IDs, and Keycards.
+      </div>
+      <div style="display: flex; gap: 0.4rem; margin-top: 0.5rem; flex-wrap: wrap;">
+        <input type="text" id="hashQueryInput" value="@ryan_47" placeholder="Query key..." style="flex:1; background:var(--bg-surface); border:1px solid var(--border-primary); color:var(--text-primary); padding:5px 8px; border-radius:4px; font-family:var(--text-mono); font-size:0.78rem; outline:none;">
+        <button class="btn btn-cyan btn-sm" onclick="runHashDemo()">Search O(1)</button>
+        <button class="btn btn-purple btn-sm" onclick="inspectHashBuckets()">View Buckets</button>
+      </div>
+      <div id="hashDemoOutput" style="background: var(--bg-inset); padding: 0.65rem; border-radius: 4px; min-height: 65px; font-size: 0.78rem; border: 1px solid var(--border-subtle);">
+        Click 'Search' or 'View Buckets' to view polynomial hash code and collision chaining.
+      </div>
+    </div>
+
+    <!-- 2. GRAPH & ADJACENCY LIST -->
+    <div class="algo-card">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h3 style="color: var(--accent-cyan); font-size: 1.15rem; font-weight: 800;">2. Graph (Adjacency List)</h3>
+        <button class="btn btn-outline btn-sm" onclick="openExplainModal('graph')">Viva 🎓</button>
+      </div>
+      <table class="complexity-table">
+        <tr><td>Traversal (BFS / DFS):</td><td class="val">O(V + E)</td></tr>
+        <tr><td>Shortest Path:</td><td class="val">O(V + E) (BFS)</td></tr>
+        <tr><td>Storage Space:</td><td class="val">O(V + E)</td></tr>
+      </table>
+      <div style="font-size: 0.82rem; color: var(--text-secondary);">
+        <strong>Game Usage:</strong> 13 suspects & 24 connection edges. BFS traces the shortest link to the victim.
+      </div>
+      <div style="display: flex; justify-content: space-between; margin-top: auto;">
+        <a href="/network" class="btn btn-primary btn-sm" style="width: 100%;">
+          <span>🕸️</span> Launch Interactive Network Canvas →
+        </a>
+      </div>
+    </div>
+
+    <!-- 3. BINARY SEARCH TREE (BST) -->
+    <div class="algo-card">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h3 style="color: var(--accent-cyan); font-size: 1.15rem; font-weight: 800;">3. Binary Search Tree (BST)</h3>
+        <button class="btn btn-outline btn-sm" onclick="openExplainModal('bst')">Viva 🎓</button>
+      </div>
+      <table class="complexity-table">
+        <tr><td>Search (Avg / Worst):</td><td class="val">O(log n) / O(n)</td></tr>
+        <tr><td>Inorder Traversal:</td><td class="val">O(n) (Sorted!)</td></tr>
+        <tr><td>Space:</td><td class="val">O(n)</td></tr>
+      </table>
+      <div style="font-size: 0.82rem; color: var(--text-secondary);">
+        <strong>Game Usage:</strong> Indexes all 15 evidence records. Inorder traversal yields sorted clue IDs!
+      </div>
+      <div style="display: flex; gap: 0.4rem; margin-top: 0.5rem; flex-wrap: wrap;">
+        <button class="btn btn-purple btn-sm" onclick="runBSTTraversalDemo('inorder')">Inorder (Sorted)</button>
+        <button class="btn btn-outline btn-sm" onclick="runBSTTraversalDemo('preorder')">Preorder</button>
+      </div>
+      <div id="bstDemoOutput" style="background: var(--bg-inset); padding: 0.65rem; border-radius: 4px; min-height: 65px; font-size: 0.78rem; border: 1px solid var(--border-subtle);">
+        Click 'Inorder' to retrieve sorted evidence records.
+      </div>
+    </div>
+
+    <!-- 4. MAX-HEAP PRIORITY QUEUE -->
+    <div class="algo-card">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h3 style="color: var(--accent-cyan); font-size: 1.15rem; font-weight: 800;">4. Max-Heap Priority Queue</h3>
+        <button class="btn btn-outline btn-sm" onclick="openExplainModal('heap')">Viva 🎓</button>
+      </div>
+      <table class="complexity-table">
+        <tr><td>Extract Max:</td><td class="val">O(log n)</td></tr>
+        <tr><td>Insert (Bubble Up):</td><td class="val">O(log n)</td></tr>
+        <tr><td>Peek Maximum:</td><td class="val">O(1)</td></tr>
+      </table>
+      <div style="font-size: 0.82rem; color: var(--text-secondary);">
+        <strong>Game Usage:</strong> Clues prioritized by forensic reliability (highest credibility at root).
+      </div>
+      <div style="display: flex; gap: 0.4rem; margin-top: 0.5rem;">
+        <button class="btn btn-cyan btn-sm" onclick="runHeapExtractDemo()" style="width: 100%;">
+          <span>⚡</span> Extract Max Priority Clue
+        </button>
+      </div>
+      <div id="heapDemoOutput" style="background: var(--bg-inset); padding: 0.65rem; border-radius: 4px; min-height: 65px; font-size: 0.78rem; border: 1px solid var(--border-subtle);">
+        Click to extract the highest-credibility evidence from the Max-Heap root.
+      </div>
+    </div>
+
+    <!-- 5. GENERAL N-ARY TREE -->
+    <div class="algo-card">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h3 style="color: var(--accent-cyan); font-size: 1.15rem; font-weight: 800;">5. General N-Ary Tree</h3>
+        <button class="btn btn-outline btn-sm" onclick="openExplainModal('tree')">Viva 🎓</button>
+      </div>
+      <table class="complexity-table">
+        <tr><td>Preorder Traversal:</td><td class="val">O(n) (Top-down)</td></tr>
+        <tr><td>Postorder Traversal:</td><td class="val">O(n) (Bottom-up)</td></tr>
+        <tr><td>Space Complexity:</td><td class="val">O(h)</td></tr>
+      </table>
+      <div style="font-size: 0.82rem; color: var(--text-secondary);">
+        <strong>Game Usage:</strong> Case category hierarchy (People, Digital Traces, Physical Clues, Locations).
+      </div>
+      <div style="display: flex; gap: 0.4rem; margin-top: 0.5rem;">
+        <button class="btn btn-cyan btn-sm" onclick="runTreeTraversalDemo('preorder')">Preorder (Top-Down)</button>
+        <button class="btn btn-purple btn-sm" onclick="runTreeTraversalDemo('postorder')">Postorder (Bottom-Up)</button>
+      </div>
+      <div id="treeDemoOutput" style="background: var(--bg-inset); padding: 0.65rem; border-radius: 4px; min-height: 65px; font-size: 0.78rem; border: 1px solid var(--border-subtle);">
+        Click to run hierarchical tree traversals.
+      </div>
+    </div>
+
+    <!-- 6. SINGLY LINKED LIST -->
+    <div class="algo-card">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h3 style="color: var(--accent-cyan); font-size: 1.15rem; font-weight: 800;">6. Singly Linked List</h3>
+        <button class="btn btn-outline btn-sm" onclick="openExplainModal('linked_list')">Viva 🎓</button>
+      </div>
+      <table class="complexity-table">
+        <tr><td>Traversal:</td><td class="val">O(n)</td></tr>
+        <tr><td>Insert at Head:</td><td class="val">O(1)</td></tr>
+        <tr><td>Pointer Structure:</td><td class="val">node.next</td></tr>
+      </table>
+      <div style="font-size: 0.82rem; color: var(--text-secondary);">
+        <strong>Game Usage:</strong> Sequential Evidence Chain connecting clue 1 to clue 2, 3, etc.
+      </div>
+      <div style="display: flex; gap: 0.4rem; margin-top: 0.5rem;">
+        <button class="btn btn-cyan btn-sm" onclick="runLinkedListDemo()" style="width: 100%;">
+          <span>🔗</span> Traverse Clue Chain (O(n))
+        </button>
+      </div>
+      <div id="linkedListDemoOutput" style="background: var(--bg-inset); padding: 0.65rem; border-radius: 4px; min-height: 65px; font-size: 0.78rem; border: 1px solid var(--border-subtle);">
+        Click to traverse the linear clue chain.
+      </div>
+    </div>
+
+    <!-- 7. DOUBLY LINKED LIST -->
+    <div class="algo-card">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h3 style="color: var(--accent-cyan); font-size: 1.15rem; font-weight: 800;">7. Doubly Linked List</h3>
+        <button class="btn btn-outline btn-sm" onclick="openExplainModal('doubly_linked_list')">Viva 🎓</button>
+      </div>
+      <table class="complexity-table">
+        <tr><td>Forward Traversal:</td><td class="val">O(n) (next)</td></tr>
+        <tr><td>Backward Traversal:</td><td class="val">O(n) (prev)</td></tr>
+        <tr><td>Insert Head/Tail:</td><td class="val">O(1)</td></tr>
+      </table>
+      <div style="font-size: 0.82rem; color: var(--text-secondary);">
+        <strong>Game Usage:</strong> Incident timeline bi-directional navigation.
+      </div>
+      <div style="display: flex; gap: 0.4rem; margin-top: 0.5rem;">
+        <button class="btn btn-cyan btn-sm" onclick="traverseDllDemo('forward')">Forward (next)</button>
+        <button class="btn btn-purple btn-sm" onclick="traverseDllDemo('backward')">Backward (prev)</button>
+      </div>
+      <div id="dllDemoOutput" style="background: var(--bg-inset); padding: 0.65rem; border-radius: 4px; min-height: 55px; font-size: 0.78rem; border: 1px solid var(--border-subtle);">
+        Click to test bi-directional pointer traversal.
+      </div>
+    </div>
+
+    <!-- 8. STACK (LIFO) -->
+    <div class="algo-card">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h3 style="color: var(--accent-cyan); font-size: 1.15rem; font-weight: 800;">8. Stack (LIFO)</h3>
+        <button class="btn btn-outline btn-sm" onclick="openExplainModal('stack')">Viva 🎓</button>
+      </div>
+      <table class="complexity-table">
+        <tr><td>Push / Pop / Peek:</td><td class="val">O(1)</td></tr>
+        <tr><td>Discipline:</td><td class="val">Last In, First Out</td></tr>
+        <tr><td>Space Complexity:</td><td class="val">O(n)</td></tr>
+      </table>
+      <div style="font-size: 0.82rem; color: var(--text-secondary);">
+        <strong>Game Usage:</strong> Investigation history breadcrumb trail & Undo/Backtracking.
+      </div>
+      <div style="display: flex; gap: 0.4rem; margin-top: 0.5rem;">
+        <button class="btn btn-cyan btn-sm" onclick="pushStackDemo()">Push Lead</button>
+        <button class="btn btn-purple btn-sm" onclick="popStackDemo()">Pop (Undo)</button>
+      </div>
+      <div id="stackDemoOutput" style="background: var(--bg-inset); padding: 0.65rem; border-radius: 4px; min-height: 55px; font-size: 0.78rem; border: 1px solid var(--border-subtle);">
+        Click to push or pop items on the investigation stack.
+      </div>
+    </div>
+
+    <!-- 9. QUEUE & CIRCULAR QUEUE -->
+    <div class="algo-card">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h3 style="color: var(--accent-cyan); font-size: 1.15rem; font-weight: 800;">9. Queue & Circular Queue</h3>
+        <button class="btn btn-outline btn-sm" onclick="openExplainModal('circular_queue')">Viva 🎓</button>
+      </div>
+      <table class="complexity-table">
+        <tr><td>Enqueue / Dequeue:</td><td class="val">O(1)</td></tr>
+        <tr><td>Modulo Wrap-around:</td><td class="val">(i + 1) % cap</td></tr>
+        <tr><td>Buffer Space:</td><td class="val">O(capacity)</td></tr>
+      </table>
+      <div style="font-size: 0.82rem; color: var(--text-secondary);">
+        <strong>Game Usage:</strong> FIFO clue intake pipeline & rotating CCTV surveillance feeds.
+      </div>
+      <div style="display: flex; gap: 0.4rem; margin-top: 0.5rem; flex-wrap: wrap;">
+        <button class="btn btn-cyan btn-sm" onclick="enqueueQueueDemo()">Enqueue</button>
+        <button class="btn btn-outline btn-sm" onclick="dequeueQueueDemo()">Dequeue</button>
+        <button class="btn btn-purple btn-sm" onclick="cycleCircularDemo()">Cycle CCTV</button>
+      </div>
+      <div id="queueDemoOutput" style="background: var(--bg-inset); padding: 0.65rem; border-radius: 4px; min-height: 40px; font-size: 0.78rem; border: 1px solid var(--border-subtle);">
+        Click to test FIFO enqueue/dequeue or circular rotation.
+      </div>
+      <div id="circularDemoOutput" style="font-size: 0.75rem; color: var(--text-muted); margin-top: 2px;"></div>
+    </div>
+
+    <!-- 10. SORTING ALGORITHMS -->
+    <div class="algo-card">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h3 style="color: var(--accent-cyan); font-size: 1.15rem; font-weight: 800;">10. Sorting Algorithms</h3>
+        <button class="btn btn-outline btn-sm" onclick="openExplainModal('sorting')">Viva 🎓</button>
+      </div>
+      <table class="complexity-table">
+        <tr><td>Merge Sort:</td><td class="val">O(n log n) stable</td></tr>
+        <tr><td>Quick Sort:</td><td class="val">O(n log n) avg</td></tr>
+        <tr><td>Merge Space:</td><td class="val">O(n)</td></tr>
+      </table>
+      <div style="font-size: 0.82rem; color: var(--text-secondary);">
+        <strong>Game Usage:</strong> Sorting suspects by risk score and evidence by credibility.
+      </div>
+      <div style="display: flex; gap: 0.4rem; margin-top: 0.5rem;">
+        <button class="btn btn-cyan btn-sm" onclick="runSortDemo('merge_sort')">Merge Sort</button>
+        <button class="btn btn-purple btn-sm" onclick="runSortDemo('quick_sort')">Quick Sort</button>
+      </div>
+      <div id="sortDemoOutput" style="background: var(--bg-inset); padding: 0.65rem; border-radius: 4px; min-height: 65px; font-size: 0.78rem; border: 1px solid var(--border-subtle);">
+        Click to run sorting with partition trace.
+      </div>
+    </div>
+
+    <!-- 11. SEARCHING ALGORITHMS -->
+    <div class="algo-card">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h3 style="color: var(--accent-cyan); font-size: 1.15rem; font-weight: 800;">11. Binary Search</h3>
+        <button class="btn btn-outline btn-sm" onclick="openExplainModal('searching')">Viva 🎓</button>
+      </div>
+      <table class="complexity-table">
+        <tr><td>Binary Search:</td><td class="val">O(log n)</td></tr>
+        <tr><td>Linear Search:</td><td class="val">O(n)</td></tr>
+        <tr><td>Condition:</td><td class="val">Sorted array</td></tr>
+      </table>
+      <div style="font-size: 0.82rem; color: var(--text-secondary);">
+        <strong>Game Usage:</strong> Halves search space using low/mid/high boundary pointers on sorted IDs.
+      </div>
+      <div style="display: flex; gap: 0.4rem; margin-top: 0.5rem;">
+        <input type="number" id="searchTargetInput" value="1047" style="flex:1; background:var(--bg-surface); border:1px solid var(--border-primary); color:var(--text-primary); padding:5px 8px; border-radius:4px; font-family:var(--text-mono); font-size:0.78rem; outline:none;">
+        <button class="btn btn-cyan btn-sm" onclick="runSearchDemo('binary_search')">Binary Search</button>
+      </div>
+      <div id="searchDemoOutput" style="background: var(--bg-inset); padding: 0.65rem; border-radius: 4px; min-height: 65px; font-size: 0.78rem; border: 1px solid var(--border-subtle);">
+        Click to run Binary Search with pointer decisions.
+      </div>
+    </div>
+
+    <!-- 12. BFS vs DFS COMPARISON -->
+    <div class="algo-card">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h3 style="color: var(--accent-cyan); font-size: 1.15rem; font-weight: 800;">12. BFS vs DFS Comparison</h3>
+        <button class="btn btn-outline btn-sm" onclick="openExplainModal('bfs')">Viva 🎓</button>
+      </div>
+      <table class="complexity-table">
+        <tr><td>BFS Underlying DS:</td><td class="val">FIFO Queue</td></tr>
+        <tr><td>DFS Underlying DS:</td><td class="val">LIFO Stack / Recursion</td></tr>
+        <tr><td>Shortest Path Guarantee:</td><td class="val">BFS (Unweighted)</td></tr>
+      </table>
+      <div style="font-size: 0.82rem; color: var(--text-secondary);">
+        <strong>Viva Rule:</strong> BFS explores level-by-level; DFS explores depth before backtracking.
+      </div>
+      <div style="display: flex; justify-content: space-between; margin-top: auto;">
+        <a href="/network" class="btn btn-purple btn-sm" style="width: 100%;">
+          <span>🕸️</span> Compare Live on Social Graph →
+        </a>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/algorithms.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,191 @@
+{% extends "base.html" %}
+
+{% block title %}Social Detective — Every Connection Is Evidence{% endblock %}
+
+{% block content %}
+<div style="display: flex; flex-direction: column; gap: 2.5rem; max-width: 1200px; margin: 0 auto;">
+
+  <!-- Hero Briefing Card -->
+  <div class="card-panel" style="padding: 3.5rem 2rem; text-align: center; background: linear-gradient(180deg, #ffffff 0%, var(--bg-surface-elevated) 100%); border: 1px solid var(--border-primary); box-shadow: var(--shadow-md);">
+    
+    <div style="display: inline-flex; align-items: center; gap: 0.5rem; background: #e0f2fe; border: 1px solid #bae6fd; padding: 0.35rem 0.95rem; border-radius: var(--radius-full); margin-bottom: 1.25rem;">
+      <span class="status-dot"></span>
+      <span style="font-family: var(--text-mono); font-size: 0.78rem; font-weight: 800; color: #0369a1; letter-spacing: 1px;">
+        CONFIDENTIAL FORENSIC DOSSIER · CASE #001
+      </span>
+    </div>
+
+    <h1 style="font-family: var(--font-main); font-size: 3.2rem; font-weight: 900; letter-spacing: -0.5px; color: var(--text-primary); margin-bottom: 0.5rem; line-height: 1.15;">
+      SOCIAL DETECTIVE
+    </h1>
+
+    <div style="font-family: var(--text-mono); font-size: 1.1rem; color: #1e40af; font-weight: 800; letter-spacing: 2px; margin-bottom: 1.5rem;">
+      EVERY CONNECTION IS EVIDENCE.
+    </div>
+
+    <p style="font-size: 1.1rem; color: var(--text-secondary); max-width: 760px; margin: 0 auto 2rem auto; line-height: 1.7;">
+      A confidential research file has vanished from the University Bio-Informatics Lab. Someone inside the network knows more than they're saying. Use real <strong style="color: var(--text-primary);">Graphs, Trees, Heaps, and Queues</strong> to trace relationships, uncover alibi contradictions, and unmask the thief.
+    </p>
+
+    <!-- Action Buttons -->
+    <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; margin-bottom: 2rem;">
+      <a href="/case" class="btn btn-primary" style="font-size: 1.05rem; padding: 0.85rem 2.25rem; font-weight: 800;">
+        <span>🕵️‍♂️</span> START CASE PLAYTHROUGH →
+      </a>
+      <a href="/case-board" class="btn btn-cyan" style="font-size: 1rem; padding: 0.85rem 1.85rem;">
+        <span>📋</span> OPEN CASE BOARD
+      </a>
+      <a href="/algorithm-lab" class="btn btn-purple" style="font-size: 1rem; padding: 0.85rem 1.85rem;">
+        <span>⚡</span> DSA VIVA LAB
+      </a>
+    </div>
+
+    <!-- Case Meta Badges -->
+    <div style="display: flex; justify-content: center; gap: 1.75rem; flex-wrap: wrap; font-family: var(--text-mono); font-size: 0.82rem; color: var(--text-muted); border-top: 1px solid var(--border-subtle); padding-top: 1.25rem;">
+      <div>SCENE: <strong style="color: var(--text-primary);">Apex Bio-Informatics Lab</strong></div>
+      <div>WINDOW: <strong style="color: var(--text-primary);">19:00 — 21:00</strong></div>
+      <div>VICTIM: <strong style="color: #0369a1;">Dr. Maya Rao</strong></div>
+      <div>STOLEN FILE: <strong style="color: #b45309;">PROJECT_CHIMERA_GENOME.enc</strong></div>
+    </div>
+
+  </div>
+
+  <!-- 3-Step Simple Guide ("How the Game Works") -->
+  <div>
+    <div style="text-align: center; margin-bottom: 1.5rem;">
+      <div style="font-family: var(--text-mono); font-size: 0.75rem; color: #1e40af; font-weight: 800; letter-spacing: 1px;">
+        INVESTIGATION PIPELINE
+      </div>
+      <h2 style="font-size: 1.8rem; font-weight: 800; color: var(--text-primary);">How To Play & Solve The Case</h2>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem;">
+      
+      <!-- Step 1 -->
+      <div class="card-panel" style="display: flex; flex-direction: column; gap: 0.75rem; border-top: 3px solid var(--accent-blue);">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <span style="font-family: var(--text-mono); font-size: 0.8rem; font-weight: 800; color: var(--accent-blue);">STEP 01</span>
+          <span class="dsa-badge">HASH TABLE O(1)</span>
+        </div>
+        <h3 style="font-size: 1.2rem; color: var(--text-primary);">Inspect 13 Lab Suspects</h3>
+        <p style="font-size: 0.9rem; color: var(--text-secondary); line-height: 1.6;">
+          Examine suspect dossiers, access badges, and statements. Identify who claimed to be off-campus and spot keycard access contradictions.
+        </p>
+        <div style="margin-top: auto; font-family: var(--text-mono); font-size: 0.75rem; color: var(--accent-blue);">
+          ➔ Key Discovery: Ryan Mehta's badge was scanned at Door #3 at 19:38.
+        </div>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="card-panel" style="display: flex; flex-direction: column; gap: 0.75rem; border-top: 3px solid var(--accent-purple);">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <span style="font-family: var(--text-mono); font-size: 0.8rem; font-weight: 800; color: var(--accent-purple);">STEP 02</span>
+          <span class="dsa-badge">GRAPH BFS O(V + E)</span>
+        </div>
+        <h3 style="font-size: 1.2rem; color: var(--text-primary);">Trace Connections & Timeline</h3>
+        <p style="font-size: 0.9rem; color: var(--text-secondary); line-height: 1.6;">
+          Run Breadth-First Search on the social network to find the shortest connection path between the victim and suspects, then step through the chronological Doubly Linked List timeline.
+        </p>
+        <div style="margin-top: auto; font-family: var(--text-mono); font-size: 0.75rem; color: var(--accent-purple);">
+          ➔ Key Discovery: Ryan linked to SysAdmin Sam Verma; Terminal 04 accessed at 19:42.
+        </div>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="card-panel" style="display: flex; flex-direction: column; gap: 0.75rem; border-top: 3px solid var(--accent-green);">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <span style="font-family: var(--text-mono); font-size: 0.8rem; font-weight: 800; color: var(--accent-green);">STEP 03</span>
+          <span class="dsa-badge">BST & MAX-HEAP</span>
+        </div>
+        <h3 style="font-size: 1.2rem; color: var(--text-primary);">Verify Forensics & Accuse</h3>
+        <p style="font-size: 0.9rem; color: var(--text-secondary); line-height: 1.6;">
+          Retrieve evidence records from the BST index, surface the highest-credibility clues via Max-Heap, construct your prosecution theory, and submit the final indictment.
+        </p>
+        <div style="margin-top: auto; font-family: var(--text-mono); font-size: 0.75rem; color: var(--accent-green);">
+          ➔ Key Discovery: CCTV #1047 & Terminal Log #1061 seal the conviction.
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Live 12 Data Structures Showcase Grid -->
+  <div class="card-panel">
+    <div class="card-header">
+      <div>
+        <div style="font-family: var(--text-mono); font-size: 0.75rem; color: var(--accent-purple); font-weight: 800;">
+          ACADEMIC VIVA DEMONSTRATION ENGINE
+        </div>
+        <h3 style="font-size: 1.3rem; color: var(--text-primary); margin-top: 2px;">12 Custom Python Data Structures & Algorithms</h3>
+      </div>
+      <a href="/algorithm-lab" class="btn btn-outline btn-sm">
+        Open Interactive Lab →
+      </a>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 0.75rem; font-size: 0.82rem;">
+      <div style="background: var(--bg-inset); padding: 0.75rem 1rem; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
+        <div style="color: var(--accent-blue); font-weight: 700;">1. Hash Table (Chaining)</div>
+        <div style="color: var(--text-muted); font-size: 0.75rem;">O(1) Avg · Username/ID query</div>
+      </div>
+
+      <div style="background: var(--bg-inset); padding: 0.75rem 1rem; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
+        <div style="color: var(--accent-blue); font-weight: 700;">2. Graph (Adjacency List)</div>
+        <div style="color: var(--text-muted); font-size: 0.75rem;">O(V + E) · 13 suspects & 24 edges</div>
+      </div>
+
+      <div style="background: var(--bg-inset); padding: 0.75rem 1rem; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
+        <div style="color: var(--accent-blue); font-weight: 700;">3. Breadth-First Search (BFS)</div>
+        <div style="color: var(--text-muted); font-size: 0.75rem;">O(V + E) · Shortest path to victim</div>
+      </div>
+
+      <div style="background: var(--bg-inset); padding: 0.75rem 1rem; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
+        <div style="color: var(--accent-blue); font-weight: 700;">4. Depth-First Search (DFS)</div>
+        <div style="color: var(--text-muted); font-size: 0.75rem;">O(V + E) · Deep conspiracy trace</div>
+      </div>
+
+      <div style="background: var(--bg-inset); padding: 0.75rem 1rem; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
+        <div style="color: var(--accent-blue); font-weight: 700;">5. Doubly Linked List</div>
+        <div style="color: var(--text-muted); font-size: 0.75rem;">O(1) Step · Prev/Next timeline</div>
+      </div>
+
+      <div style="background: var(--bg-inset); padding: 0.75rem 1rem; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
+        <div style="color: var(--accent-blue); font-weight: 700;">6. Binary Search Tree (BST)</div>
+        <div style="color: var(--text-muted); font-size: 0.75rem;">O(log n) · Inorder sorted clues</div>
+      </div>
+
+      <div style="background: var(--bg-inset); padding: 0.75rem 1rem; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
+        <div style="color: var(--accent-blue); font-weight: 700;">7. Max-Heap Priority Queue</div>
+        <div style="color: var(--text-muted); font-size: 0.75rem;">O(1) Peek · Strongest evidence</div>
+      </div>
+
+      <div style="background: var(--bg-inset); padding: 0.75rem 1rem; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
+        <div style="color: var(--accent-blue); font-weight: 700;">8. LIFO Stack (Backtracking)</div>
+        <div style="color: var(--text-muted); font-size: 0.75rem;">O(1) Pop · Investigation undo</div>
+      </div>
+
+      <div style="background: var(--bg-inset); padding: 0.75rem 1rem; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
+        <div style="color: var(--accent-blue); font-weight: 700;">9. Circular Queue (Modulo)</div>
+        <div style="color: var(--text-muted); font-size: 0.75rem;">O(1) Cycle · Surveillance CCTV</div>
+      </div>
+
+      <div style="background: var(--bg-inset); padding: 0.75rem 1rem; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
+        <div style="color: var(--accent-blue); font-weight: 700;">10. Singly Linked List</div>
+        <div style="color: var(--text-muted); font-size: 0.75rem;">O(n) · Linear clue pipeline</div>
+      </div>
+
+      <div style="background: var(--bg-inset); padding: 0.75rem 1rem; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
+        <div style="color: var(--accent-blue); font-weight: 700;">11. Merge Sort & Quick Sort</div>
+        <div style="color: var(--text-muted); font-size: 0.75rem;">O(n log n) · Suspect threat sorting</div>
+      </div>
+
+      <div style="background: var(--bg-inset); padding: 0.75rem 1rem; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
+        <div style="color: var(--accent-blue); font-weight: 700;">12. Binary Search</div>
+        <div style="color: var(--text-muted); font-size: 0.75rem;">O(log n) · Logarithmic record search</div>
+      </div>
+    </div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}

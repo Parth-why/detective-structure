@@ -1,0 +1,100 @@
+{
+  "missions": [
+    {
+      "id": "M01",
+      "title": "Establish the Social Graph",
+      "description": "Trace the connections between Dr. Maya Rao and all lab personnel using Breadth-First Search (BFS).",
+      "data_structure": "Graph + Queue",
+      "completed": false,
+      "xp": 100
+    },
+    {
+      "id": "M02",
+      "title": "Examine Suspect Profiles",
+      "description": "Use the Hash Table Detective Database to query suspect usernames and locate high-risk individuals.",
+      "data_structure": "Hash Table",
+      "completed": false,
+      "xp": 100
+    },
+    {
+      "id": "M03",
+      "title": "Reconstruct the Incident Sequence",
+      "description": "Traverse the Case Timeline forward and backward using the Doubly Linked List.",
+      "data_structure": "Doubly Linked List",
+      "completed": false,
+      "xp": 120
+    },
+    {
+      "id": "M04",
+      "title": "Inspect the Evidence Chain",
+      "description": "Follow the linear Singly Linked List clue chain from the initial darkweb dispatch to the final payout.",
+      "data_structure": "Singly Linked List",
+      "completed": false,
+      "xp": 120
+    },
+    {
+      "id": "M05",
+      "title": "Prioritize Strongest Forensics",
+      "description": "Extract the highest-credibility forensic items from the Max-Heap priority queue.",
+      "data_structure": "MaxHeap",
+      "completed": false,
+      "xp": 150
+    },
+    {
+      "id": "M06",
+      "title": "Perform Structural Tree Traversals",
+      "description": "Run Preorder (Top-down) and Postorder (Bottom-up) traversals across the case hierarchy tree.",
+      "data_structure": "N-ary Tree",
+      "completed": false,
+      "xp": 150
+    },
+    {
+      "id": "M07",
+      "title": "Execute Sorted BST Retrieval",
+      "description": "Run Inorder traversal on the Evidence Binary Search Tree to produce a sorted list of all evidence IDs.",
+      "data_structure": "Binary Search Tree",
+      "completed": false,
+      "xp": 150
+    },
+    {
+      "id": "M08",
+      "title": "Submit Final Accusation",
+      "description": "Identify the primary culprit, verify their motive, method, and opportunity, and close Case 001.",
+      "data_structure": "Case Engine",
+      "completed": false,
+      "xp": 200
+    }
+  ],
+  "hints": [
+    {
+      "id": 1,
+      "cost_score": 25,
+      "text": "Look at Dr. Maya Rao's direct connections in the social network graph. The perpetrator had direct knowledge of her lab schedule.",
+      "used": false
+    },
+    {
+      "id": 2,
+      "cost_score": 35,
+      "text": "Check the Timeline around 19:40-19:50. A suspect's library alibi is contradicted by CCTV Camera 04 at the rear fire stairs.",
+      "used": false
+    },
+    {
+      "id": 3,
+      "cost_score": 50,
+      "text": "Use the Hash Table database to search '@ryan_47' and inspect Evidence #1061 and Evidence #1160. Notice the SSH reverse tunnel and USB mass storage exfiltration.",
+      "used": false
+    }
+  ],
+  "achievements": [
+    { "id": "ACH_FIRST_CLUE", "title": "First Clue", "description": "Discovered and analyzed your first evidence item.", "unlocked": false, "icon": "🔍" },
+    { "id": "ACH_NETWORK_ANALYST", "title": "Network Analyst", "description": "Executed Breadth-First Search (BFS) connection trace on the social graph.", "unlocked": false, "icon": "🌐" },
+    { "id": "ACH_DEEP_DIVE", "title": "Deep Dive", "description": "Executed Depth-First Search (DFS) deep investigative trace.", "unlocked": false, "icon": "⚡" },
+    { "id": "ACH_HASH_HUNTER", "title": "Hash Hunter", "description": "Performed 3 or more O(1) searches in the Detective Database.", "unlocked": false, "icon": "⚡" },
+    { "id": "ACH_BACKTRACKER", "title": "Backtracker", "description": "Utilized Stack Backtracking to return to a previous investigation state.", "unlocked": false, "icon": "⏮️" },
+    { "id": "ACH_QUEUE_MASTER", "title": "Queue Master", "description": "Processed evidence items through the FIFO evidence pipeline.", "unlocked": false, "icon": "📋" },
+    { "id": "ACH_TIMELINE_DETECTIVE", "title": "Timeline Detective", "description": "Traversed the Doubly Linked List timeline in both forward and backward directions.", "unlocked": false, "icon": "⏳" },
+    { "id": "ACH_TREE_WALKER", "title": "Tree Walker", "description": "Completed Preorder, Inorder, and Postorder tree traversals.", "unlocked": false, "icon": "🌳" },
+    { "id": "ACH_ALGORITHM_MASTER", "title": "Algorithm Master", "description": "Successfully demonstrated all 12 custom data structures and algorithms.", "unlocked": false, "icon": "🎓" },
+    { "id": "ACH_CASE_CLOSED", "title": "Case Closed", "description": "Accused the correct culprit with supporting forensic evidence.", "unlocked": false, "icon": "🏆" }
+  ]
+}

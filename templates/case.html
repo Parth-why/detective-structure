@@ -1,0 +1,633 @@
+{% extends "base.html" %}
+
+{% block title %}Case 001: The Vanishing File — Social Detective Playthrough{% endblock %}
+
+{% block content %}
+<div class="case-playthrough-container" style="display: flex; flex-direction: column; gap: 1rem; max-width: 1060px; margin: 0 auto;">
+
+  <!-- Subtle Investigation Trail Stepper -->
+  <div class="case-stepper-wrap">
+    <div class="case-stepper-title">
+      <div style="font-family: var(--text-mono); font-size: 0.75rem; color: var(--accent-cyan); font-weight: 700; letter-spacing: 0.5px;">
+        CASE 001 · THE VANISHING FILE
+      </div>
+      <div style="font-family: var(--text-mono); font-size: 0.75rem; color: var(--text-muted);">
+        19:00 — 21:00 · APEX BIO-INFORMATICS LAB
+      </div>
+    </div>
+
+    <div class="case-stepper" id="caseInvestigationStepper">
+      {% set curr = summary.state.current_stage %}
+      {% set completed = summary.state.completed_stages %}
+      {% set max_unlocked = summary.state.max_unlocked_stage %}
+      {% set stage_items = [(0, '0. Briefing'), (1, '1. Suspects'), (2, '2. Connections'), (3, '3. Timeline'), (4, '4. Evidence'), (5, '5. Theory'), (6, '6. Accusation')] %}
+      {% for idx, name in stage_items %}
+        {% set is_active = (idx == curr) %}
+        {% set is_completed = (idx in completed) %}
+        {% set is_locked = (idx > max_unlocked and not is_completed and idx != curr) %}
+        <div class="stepper-step {{ 'active' if is_active else 'completed' if is_completed else 'locked' if is_locked else '' }}" data-stage="{{ idx }}" title="Click to jump to {{ name }}">
+          {% if is_active %}
+            <span style="color:var(--accent-cyan);">●</span> <strong>{{ name }}</strong>
+          {% elif is_completed %}
+            <span style="color:var(--accent-green); font-weight:700;">✓</span> {{ name }}
+          {% elif is_locked %}
+            <span style="color:rgba(255,255,255,0.2);">🔒</span> <span style="color:var(--text-muted);">{{ name }}</span>
+          {% else %}
+            <span style="color:var(--text-muted);">○</span> {{ name }}
+          {% endif %}
+        </div>
+        {% if not loop.last %}<span class="stepper-sep">➔</span>{% endif %}
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Persistent Dynamic Case Memory Strip -->
+  <div class="case-memory-strip" id="caseMemoryStrip">
+    <div style="display: flex; align-items: center; gap: 0.6rem;">
+      <span style="font-family: var(--text-mono); font-size: 0.75rem; color: var(--accent-cyan); font-weight: 800; letter-spacing: 0.5px;">ACTIVE LEAD:</span>
+      <span id="caseNotesSummaryText" style="font-family: var(--text-mono); font-size: 0.82rem; color: var(--text-primary);">
+        {{ summary.state.case_notes_summary }}
+      </span>
+    </div>
+    <div id="caseMemoryProgressBadge" style="font-family: var(--text-mono); font-size: 0.75rem; color: var(--accent-green); font-weight: 700;">
+      {{ summary.investigated_suspects_count }}/13 Suspects • {{ summary.discovered_evidence_count }}/15 Clues • {{ summary.timeline_reconstructed_count }}/11 Events
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       STAGE 0: CASE BRIEFING
+       ========================================================================= -->
+  <div class="stage-panel {{ 'active' if summary.state.current_stage == 0 else '' }}" id="stage-panel-0">
+    <div class="card-panel" style="padding: 2.5rem 2rem;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+        <span class="dsa-badge" style="color: var(--accent-cyan);">STAGE 0 · INCIDENT DOSSIER</span>
+        <span style="font-family: var(--text-mono); font-size: 0.75rem; color: var(--text-muted);">STATUS: ACTIVE INVESTIGATION</span>
+      </div>
+
+      <h1 style="font-family: var(--font-main); font-size: 2.4rem; font-weight: 900; color: var(--text-primary); margin-bottom: 0.25rem;">
+        THE VANISHING FILE
+      </h1>
+      <div style="font-family: var(--text-mono); color: var(--accent-cyan); font-size: 0.85rem; margin-bottom: 1.5rem;">
+        Apex Bio-Informatics Lab · Incident Window: 19:00 — 21:00 PM
+      </div>
+
+      <!-- Narrative Hook -->
+      <div style="background: var(--bg-inset); border: 1px solid var(--border-primary); border-left: 4px solid var(--accent-cyan); border-radius: var(--radius-sm); padding: 1.5rem; line-height: 1.7; font-size: 1rem; color: var(--text-secondary); margin-bottom: 1.75rem;">
+        <p style="margin-bottom: 0.6rem; color: var(--text-primary); font-size: 1.05rem;">
+          At <strong>19:42 PM</strong>, the breakthrough CRISPR sequencing research file <code style="color:var(--accent-amber);">PROJECT_CHIMERA_GENOME.enc</code> was stolen from Workstation #04 inside the secure laboratory and deleted from the local database.
+        </p>
+        <p style="margin-bottom: 0.6rem;">
+          Principal Investigator <strong>Dr. Maya Rao</strong> claims she stepped out to the 1st-floor cafeteria at 19:30, only to return at 20:45 and find her research gone.
+        </p>
+        <p style="color: var(--accent-red); font-weight: 700; margin: 0;">
+          Thirteen individuals were logged on campus. One of them used Maya's stolen badge to access the room while fabricating an off-site alibi.
+        </p>
+      </div>
+
+      <!-- 3 Objectives Grid -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
+        <div style="background: var(--bg-inset); border: 1px solid var(--border-subtle); border-radius: var(--radius-xs); padding: 1rem;">
+          <div style="font-family: var(--text-mono); font-size: 0.72rem; color: var(--accent-cyan); margin-bottom: 2px;">GOAL 1: SUSPECTS</div>
+          <div style="font-size: 0.95rem; font-weight: 700; color: var(--text-primary);">Check alibis & badge logs</div>
+        </div>
+        <div style="background: var(--bg-inset); border: 1px solid var(--border-subtle); border-radius: var(--radius-xs); padding: 1rem;">
+          <div style="font-family: var(--text-mono); font-size: 0.72rem; color: var(--accent-purple); margin-bottom: 2px;">GOAL 2: NETWORK</div>
+          <div style="font-size: 0.95rem; font-weight: 700; color: var(--text-primary);">Trace connections using BFS</div>
+        </div>
+        <div style="background: var(--bg-inset); border: 1px solid var(--border-subtle); border-radius: var(--radius-xs); padding: 1rem;">
+          <div style="font-family: var(--text-mono); font-size: 0.72rem; color: var(--accent-green); margin-bottom: 2px;">GOAL 3: FORENSICS</div>
+          <div style="font-size: 0.95rem; font-weight: 700; color: var(--text-primary);">Match timestamps to accuse</div>
+        </div>
+      </div>
+
+      <div style="text-align: center;">
+        <button class="btn btn-primary" onclick="globalCaseFlow.startInvestigation()" style="font-size: 1.15rem; padding: 0.9rem 3rem;">
+          <span>🔍</span> EXAMINE SUSPECTS →
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       STAGE 1: SUSPECTS ("WHO HAD ACCESS?")
+       ========================================================================= -->
+  <div class="stage-panel {{ 'active' if summary.state.current_stage == 1 else '' }}" id="stage-panel-1">
+    <div class="narrative-header-card">
+      <div class="stage-objective-pill">STAGE 1 · SUSPECT ROSTER</div>
+      <h2 style="font-size: 1.6rem; color: var(--text-primary); margin-bottom: 0.35rem;">WHO HAD ACCESS TO THE FACILITY?</h2>
+      <p style="color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 0.4rem;">
+        Thirteen individuals had badge or remote credentials during the 19:00 - 21:00 window. Click on any suspect to inspect their statement, keycard records, and alibi.
+      </p>
+      <div style="font-size: 0.85rem; color: var(--accent-cyan); font-weight: 700;">
+        💡 Detective Tip: Pay close attention to <strong>Ryan Mehta</strong> (claiming to be at the library) and <strong>Dr. Maya Rao</strong> (the victim).
+      </div>
+    </div>
+
+    <!-- Suspect Ledger Rows -->
+    <div class="card-panel" style="padding: 0; overflow: hidden;">
+      <div class="ledger-list" id="suspectsLedgerList">
+        {% for s in suspects %}
+        {% set status = summary.state.suspect_statuses.get(s.id, 'NOT INVESTIGATED') %}
+        <div class="ledger-item" onclick="globalCaseFlow.inspectSuspect('{{ s.id }}')" style="cursor: pointer;" id="ledger-row-{{ s.id }}">
+          <div style="display: flex; align-items: center; gap: 1rem;">
+            <div class="ledger-num">{{ '%02d' % loop.index }}</div>
+            <div>
+              <div style="font-weight: 700; color: var(--text-primary); font-size: 0.95rem; display: flex; align-items: center; gap: 0.5rem;">
+                {{ s.name }}
+                {% if s.id == 'ryan_mehta' %}
+                  <span class="dsa-badge" style="background:rgba(255,51,102,0.15); color:var(--accent-red); border-color:rgba(255,51,102,0.4);">PRIME SUSPECT</span>
+                {% elif s.id == 'maya_rao' %}
+                  <span class="dsa-badge" style="background:rgba(0,255,157,0.15); color:var(--accent-green); border-color:rgba(0,255,157,0.4);">VICTIM</span>
+                {% endif %}
+              </div>
+              <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 2px;">
+                {{ s.role }} • Keycard: <span style="font-family: var(--text-mono); color: var(--text-secondary);">{{ s.keycard_id or 'KC-NONE' }}</span>
+              </div>
+            </div>
+          </div>
+
+          <div style="display: flex; align-items: center; gap: 0.75rem;">
+            <span class="dsa-badge" id="suspect-status-{{ s.id }}" style="font-size: 0.72rem; color: {{ 'var(--accent-red)' if status == 'CRITICAL' else 'var(--accent-green)' if status in ['INVESTIGATED', 'CLEARED'] else 'var(--accent-amber)' if status == 'RELEVANT' else 'var(--text-muted)' }};">
+              {{ status }}
+            </span>
+            <span class="btn btn-outline btn-sm">
+              INSPECT DOSSIER →
+            </span>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Stage 1 Action Banner -->
+    <div class="dominant-action-banner" id="stage1ActionBanner">
+      <div>
+        <div style="font-size: 0.75rem; color: var(--text-muted); font-family: var(--text-mono); font-weight: 700;">NEXT LEAD</div>
+        <div id="stage1NextLeadText" style="font-size: 0.98rem; font-weight: 700; color: var(--text-primary); margin-top: 2px;">
+          {{ summary.state.next_lead.text }}
+        </div>
+      </div>
+      <button id="stage1ActionBtn" class="btn btn-primary" onclick="globalCaseFlow.inspectSuspect('ryan_mehta')">
+        {{ summary.state.next_lead.action_text or summary.state.next_lead.action_label or 'INVESTIGATE RYAN MEHTA →' }}
+      </button>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       STAGE 2: CONNECTIONS ("SOMETHING DOESN'T ADD UP")
+       ========================================================================= -->
+  <div class="stage-panel {{ 'active' if summary.state.current_stage == 2 else '' }}" id="stage-panel-2">
+    <div class="narrative-header-card" style="border-left-color: var(--accent-purple);">
+      <div class="stage-objective-pill" style="color: var(--accent-purple);">STAGE 2 · SOCIAL GRAPH TRACING</div>
+      <h2 style="font-size: 1.6rem; color: var(--text-primary); margin-bottom: 0.35rem;">SOMETHING DOESN'T ADD UP</h2>
+      <p style="color: var(--text-secondary); font-size: 0.95rem;">
+        Ryan claims he barely knew Dr. Maya Rao. Run Breadth-First Search (BFS) to trace the shortest degrees of separation across the lab's contact network.
+      </p>
+    </div>
+
+    <div class="card-panel">
+      <!-- Fast-Action Presets Bar -->
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.75rem; background: var(--bg-inset); padding: 0.75rem 1rem; border-radius: var(--radius-sm); border: 1px solid var(--border-primary);">
+        <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+          <span style="font-size: 0.75rem; color: var(--text-muted); font-family: var(--text-mono); font-weight: 700;">START:</span>
+          <select id="graphTraceStart" style="background: var(--bg-surface); border: 1px solid var(--border-primary); color: var(--text-primary); padding: 4px 8px; border-radius: var(--radius-xs); font-size: 0.8rem; outline:none;">
+            {% for s in suspects %}
+            <option value="{{ s.id }}" {% if s.id == 'maya_rao' %}selected{% endif %}>{{ s.name }}</option>
+            {% endfor %}
+          </select>
+          <span style="color: var(--accent-cyan); font-weight: 800;">➔ TARGET:</span>
+          <select id="graphTraceTarget" style="background: var(--bg-surface); border: 1px solid var(--border-primary); color: var(--text-primary); padding: 4px 8px; border-radius: var(--radius-xs); font-size: 0.8rem; outline:none;">
+            {% for s in suspects %}
+            <option value="{{ s.id }}" {% if s.id == 'ryan_mehta' %}selected{% endif %}>{{ s.name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+          <button class="btn btn-primary btn-sm" onclick="globalCaseFlow.traceShortestConnection(document.getElementById('graphTraceStart').value, document.getElementById('graphTraceTarget').value)">
+            <span>🎯</span> TRACE BFS SHORTEST PATH
+          </button>
+          <button class="btn btn-purple btn-sm" onclick="globalCaseFlow.traceShortestConnection('ryan_mehta', 'sam_verma')">
+            <span>⚡</span> Trace Ryan ➔ Sam
+          </button>
+        </div>
+      </div>
+
+      <!-- Network Canvas -->
+      <div class="network-canvas-container" style="height: 420px;">
+        <canvas id="caseNetworkCanvas"></canvas>
+      </div>
+
+      <!-- Live Connection Result Output -->
+      <div id="connectionsResultBox" style="margin-top: 1rem; padding: 1rem; background: var(--bg-inset); border: 1px solid var(--border-primary); border-radius: var(--radius-sm); font-size: 0.88rem; color: var(--text-primary); line-height: 1.6;">
+        Click <strong>'TRACE BFS SHORTEST PATH'</strong> to trace how Ryan Mehta links to Dr. Maya Rao through the social graph.
+      </div>
+
+      <!-- Expandable "How This Works" -->
+      <div class="how-it-works-box" id="howConnectionsBox">
+        <div class="how-it-works-header" onclick="toggleHowBox('howConnectionsBox')">
+          <span>HOW BFS GRAPH TRACING WORKS +</span>
+          <span class="how-sign">+</span>
+        </div>
+        <div class="how-it-works-body">
+          <div style="font-family: var(--text-mono); font-size: 0.8rem; color: var(--accent-cyan); margin-bottom: 0.4rem;">
+            ALGORITHM: Breadth-First Search (BFS) · STRUCTURE: FIFO Queue & Adjacency List · COMPLEXITY: O(V + E)
+          </div>
+          <p style="font-size: 0.82rem; color: var(--text-secondary); line-height: 1.5;">
+            BFS visits vertices level-by-level in increasing hop distance. In an unweighted social network, BFS guarantees the minimum degree of separation between any two individuals.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stage 2 Action Banner -->
+    <div class="dominant-action-banner" id="stage2ActionBanner">
+      <div>
+        <div style="font-size: 0.75rem; color: var(--text-muted); font-family: var(--text-mono); font-weight: 700;">NEXT LEAD</div>
+        <div id="stage2NextLeadText" style="font-size: 0.98rem; font-weight: 700; color: var(--text-primary); margin-top: 2px;">
+          Trace Ryan's connection to discover whether he shared server access with Maya.
+        </div>
+      </div>
+      <button id="stage2ActionBtn" class="btn btn-primary" onclick="globalCaseFlow.traceShortestConnection('maya_rao', 'ryan_mehta')">
+        TRACE CONNECTION →
+      </button>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       STAGE 3: TIMELINE ("WHAT HAPPENED THAT NIGHT?")
+       ========================================================================= -->
+  <div class="stage-panel {{ 'active' if summary.state.current_stage == 3 else '' }}" id="stage-panel-3">
+    <div class="narrative-header-card" style="border-left-color: var(--accent-cyan);">
+      <div class="stage-objective-pill">STAGE 3 · CHRONOLOGICAL TIMELINE</div>
+      <h2 style="font-size: 1.6rem; color: var(--text-primary); margin-bottom: 0.35rem;">WHAT HAPPENED THAT NIGHT?</h2>
+      <p style="color: var(--text-secondary); font-size: 0.95rem;">
+        Reconstruct the incident step-by-step between 19:00 and 21:00 using forward (<code>node.next</code>) and backward (<code>node.prev</code>) Doubly Linked List traversal.
+      </p>
+    </div>
+
+    <div class="card-panel">
+      <!-- Active Event Spotlight Viewer -->
+      <div id="timelineSingleEventViewer" style="background: var(--bg-inset); border: 1px solid var(--border-primary); border-radius: var(--radius-sm); padding: 1.5rem; margin-bottom: 1rem;">
+        <!-- Populated via JS -->
+      </div>
+
+      <!-- Contradiction Callout Box -->
+      <div id="timelineContradictionCallout" style="display: none; background: rgba(255, 51, 102, 0.1); border: 1px solid var(--accent-red); border-left: 4px solid var(--accent-red); padding: 1.1rem; border-radius: var(--radius-sm); margin-bottom: 1rem;">
+        <!-- Populated via JS -->
+      </div>
+
+      <!-- Stepper Controls Bar -->
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;">
+        <button class="btn btn-outline" onclick="globalCaseFlow.prevTimelineEvent()">
+          <span>⏮️</span> PREVIOUS EVENT (node.prev)
+        </button>
+
+        <div style="font-family: var(--text-mono); font-size: 0.8rem; color: var(--text-muted);" id="timelineStepCounter">
+          EVENT NAVIGATION (O(1) / STEP)
+        </div>
+
+        <button class="btn btn-primary" onclick="globalCaseFlow.nextTimelineEvent()">
+          <span>⏭️</span> NEXT EVENT (node.next)
+        </button>
+      </div>
+
+      <!-- Expandable "How This Works" -->
+      <div class="how-it-works-box" id="howTimelineBox" style="margin-top: 1.25rem;">
+        <div class="how-it-works-header" onclick="toggleHowBox('howTimelineBox')">
+          <span>HOW DOUBLY LINKED LIST TIMELINE WORKS +</span>
+          <span class="how-sign">+</span>
+        </div>
+        <div class="how-it-works-body">
+          <div style="font-family: var(--text-mono); font-size: 0.8rem; color: var(--accent-cyan); margin-bottom: 0.4rem;">
+            DATA STRUCTURE: Doubly Linked List · POINTERS: node.prev, node.next · COMPLEXITY: O(1) step transition
+          </div>
+          <p style="font-size: 0.82rem; color: var(--text-secondary); line-height: 1.5;">
+            Detectives need to verify events chronologically forward in time while also moving backward in time to cross-reference suspect alibis without re-allocating memory arrays.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stage 3 Action Banner -->
+    <div class="dominant-action-banner" id="stage3ActionBanner">
+      <div>
+        <div style="font-size: 0.75rem; color: var(--text-muted); font-family: var(--text-mono); font-weight: 700;">NEXT LEAD</div>
+        <div id="stage3NextLeadText" style="font-size: 0.98rem; font-weight: 700; color: var(--text-primary); margin-top: 2px;">
+          {{ summary.state.next_lead.text }}
+        </div>
+      </div>
+      <button id="stage3ActionBtn" class="btn btn-primary" onclick="globalCaseFlow.nextTimelineEvent()">
+        {{ summary.state.next_lead.action_text or summary.state.next_lead.action_label or 'NEXT EVENT →' }}
+      </button>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       STAGE 4: EVIDENCE ("FOLLOW THE EVIDENCE")
+       ========================================================================= -->
+  <div class="stage-panel {{ 'active' if summary.state.current_stage == 4 else '' }}" id="stage-panel-4">
+    <div class="narrative-header-card" style="border-left-color: var(--accent-green);">
+      <div class="stage-objective-pill" style="color: var(--accent-green);">STAGE 4 · FORENSIC EVIDENCE VAULT</div>
+      <h2 style="font-size: 1.6rem; color: var(--text-primary); margin-bottom: 0.35rem;">FOLLOW THE EVIDENCE</h2>
+      <p style="color: var(--text-secondary); font-size: 0.95rem;">
+        Examine the sequential clue pipeline, search the Binary Search Tree (BST) for Record #1047, and surface the most reliable forensic evidence using the Max-Heap.
+      </p>
+    </div>
+
+    <!-- Tool A: Sequential Clue Chain -->
+    <div class="card-panel" style="margin-bottom: 1.25rem;">
+      <div class="card-header">
+        <div class="card-title">
+          <span>🔗</span> Singly Linked List: Sequential Clue Chain
+        </div>
+        <button class="btn btn-outline btn-sm" onclick="globalCaseFlow.advanceClueChain()">
+          EXAMINE NEXT CLUE IN CHAIN →
+        </button>
+      </div>
+
+      <div id="clueChainCurrentDisplay">
+        <!-- Loaded dynamically via JS -->
+      </div>
+    </div>
+
+    <!-- Tools B & C: BST Search & Max-Heap Priority -->
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem;">
+
+      <!-- Find Record (BST) -->
+      <div class="card-panel">
+        <div class="card-header">
+          <div class="card-title">
+            <span>🌳</span> Search BST Index (O(log n))
+          </div>
+        </div>
+        <p style="font-size: 0.82rem; color: var(--text-secondary); margin-bottom: 0.75rem;">
+          The investigation log references Evidence #1047 (Stairwell CCTV) and #1061 (Terminal 04 Exfiltration).
+        </p>
+        
+        <div style="display: flex; gap: 0.4rem; margin-bottom: 0.6rem;">
+          <input type="text" id="playthroughEvidenceSearch" value="1047" placeholder="Evidence ID (e.g. 1047)..." style="flex:1; background:var(--bg-surface); border:1px solid var(--border-primary); color:var(--text-primary); padding:6px 10px; border-radius:var(--radius-xs); font-family:var(--text-mono); font-size:0.8rem; outline:none;">
+          <button class="btn btn-primary btn-sm" onclick="globalCaseFlow.searchEvidenceBST()">FIND RECORD →</button>
+        </div>
+
+        <!-- Quick Search Pills -->
+        <div style="display: flex; gap: 0.3rem; margin-bottom: 0.75rem; flex-wrap: wrap;">
+          <button class="dsa-badge" onclick="document.getElementById('playthroughEvidenceSearch').value='1047'; globalCaseFlow.searchEvidenceBST();" style="cursor:pointer;">#1047 CCTV</button>
+          <button class="dsa-badge" onclick="document.getElementById('playthroughEvidenceSearch').value='1061'; globalCaseFlow.searchEvidenceBST();" style="cursor:pointer;">#1061 Terminal</button>
+          <button class="dsa-badge" onclick="document.getElementById('playthroughEvidenceSearch').value='1075'; globalCaseFlow.searchEvidenceBST();" style="cursor:pointer;">#1075 Keycard</button>
+          <button class="dsa-badge" onclick="document.getElementById('playthroughEvidenceSearch').value='1120'; globalCaseFlow.searchEvidenceBST();" style="cursor:pointer;">#1120 Chat</button>
+        </div>
+
+        <div id="bstSearchResultBox" style="background: var(--bg-inset); border: 1px solid var(--border-subtle); padding: 0.75rem; border-radius: var(--radius-xs); min-height: 75px; font-size: 0.82rem;">
+          Click 'FIND RECORD →' or choose a quick badge above to retrieve forensic records.
+        </div>
+      </div>
+
+      <!-- Priority Clue (Heap) -->
+      <div class="card-panel">
+        <div class="card-header">
+          <div class="card-title">
+            <span>🎯</span> Max-Heap Priority Forensics
+          </div>
+        </div>
+        <p style="font-size: 0.82rem; color: var(--text-secondary); margin-bottom: 0.75rem;">
+          Not all clues are equally reliable. Surface the highest-credibility forensic evidence item from the Heap root in O(1) peek.
+        </p>
+        <div style="margin-bottom: 0.75rem;">
+          <button class="btn btn-cyan btn-sm" onclick="globalCaseFlow.extractPriorityHeapClue()" style="width: 100%;">
+            <span>⚡</span> EXTRACT STRONGEST EVIDENCE (O(1) / O(log n))
+          </button>
+        </div>
+        <div id="heapPriorityResultBox" style="background: var(--bg-inset); border: 1px solid var(--border-subtle); padding: 0.75rem; border-radius: var(--radius-xs); min-height: 75px; font-size: 0.82rem;">
+          Click to surface the highest-credibility forensic evidence item from the Max-Heap root.
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Stage 4 Action Banner -->
+    <div class="dominant-action-banner" id="stage4ActionBanner">
+      <div>
+        <div style="font-size: 0.75rem; color: var(--text-muted); font-family: var(--text-mono); font-weight: 700;">NEXT LEAD</div>
+        <div id="stage4NextLeadText" style="font-size: 0.98rem; font-weight: 700; color: var(--text-primary); margin-top: 2px;">
+          {{ summary.state.next_lead.text }}
+        </div>
+      </div>
+      <button id="stage4ActionBtn" class="btn btn-primary" onclick="globalCaseFlow.advanceToNextStage()">
+        {{ summary.state.next_lead.action_text or summary.state.next_lead.action_label or 'BUILD YOUR THEORY →' }}
+      </button>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       STAGE 5: THEORY ("PUT THE PIECES TOGETHER")
+       ========================================================================= -->
+  <div class="stage-panel {{ 'active' if summary.state.current_stage == 5 else '' }}" id="stage-panel-5">
+    <div class="narrative-header-card" style="border-left-color: var(--accent-amber);">
+      <div class="stage-objective-pill" style="color: var(--accent-amber);">STAGE 5 · PROSECUTION THEORY</div>
+      <h2 style="font-size: 1.6rem; color: var(--text-primary); margin-bottom: 0.35rem;">PUT THE PIECES TOGETHER</h2>
+      <p style="color: var(--text-secondary); font-size: 0.95rem;">
+        Review your findings and classify suspects. Tag <strong>Ryan Mehta</strong> as <strong>CRITICAL</strong> and <strong>Dr. Maya Rao</strong> as <strong>CLEARED</strong> to finalize your case.
+      </p>
+    </div>
+
+    <!-- Summary Box -->
+    <div class="card-panel" style="margin-bottom: 1.25rem; background: var(--bg-inset);">
+      <div style="font-family: var(--text-mono); font-size: 0.75rem; color: var(--accent-cyan); font-weight: 800; margin-bottom: 0.4rem;">
+        KEY FACTS ESTABLISHED:
+      </div>
+      <div style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.7;">
+        • <strong>Ryan Mehta:</strong> Keycard KC-9021 scanned at Door #3 at 19:38 • Workstation #04 accessed at 19:42 • Fled via fire stairs at 19:47.<br>
+        • <strong>Dr. Maya Rao:</strong> Principal Investigator (Victim) • Verified in cafeteria from 19:30 to 20:45 by witness registers.<br>
+        • <strong>Sam Verma:</strong> Systems Administrator • Provided SSH proxy jump-box for 20% cryptocurrency bribe.
+      </div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 1.25rem;">
+
+      <!-- Suspect Classification Table -->
+      <div class="card-panel" style="padding: 0; overflow: hidden;">
+        <div class="card-header" style="padding: 0.85rem 1.25rem; margin-bottom: 0;">
+          <div class="card-title">Classify Suspects</div>
+          <span style="font-size: 0.75rem; color: var(--text-muted); font-family: var(--text-mono);">1-CLICK TAG</span>
+        </div>
+
+        <div style="display: flex; flex-direction: column; max-height: 400px; overflow-y: auto;">
+          {% for s in suspects %}
+          {% set status = summary.state.suspect_statuses.get(s.id, 'UNMARKED') %}
+          <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.7rem 1rem; border-bottom: 1px solid var(--border-subtle); background: var(--bg-surface);">
+            <div>
+              <div style="font-weight: 700; color: var(--text-primary); font-size: 0.92rem;">{{ s.name }}</div>
+              <div style="font-size: 0.75rem; color: var(--text-muted);">{{ s.role }}</div>
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 0.35rem;">
+              <span id="theory-tag-{{ s.id }}" class="dsa-badge" style="font-size: 0.68rem; color: {{ 'var(--accent-red)' if status == 'CRITICAL' else 'var(--accent-green)' if status == 'CLEARED' else 'var(--accent-amber)' if status == 'RELEVANT' else 'var(--text-muted)' }};">
+                {{ status }}
+              </span>
+              <button class="btn btn-outline btn-sm" onclick="globalCaseFlow.setSuspectTag('{{ s.id }}', 'CLEARED')" title="Clear suspect based on verified alibi">Clear</button>
+              <button class="btn btn-amber btn-sm" onclick="globalCaseFlow.setSuspectTag('{{ s.id }}', 'RELEVANT')" title="Mark relevant for further scrutiny">Relevant</button>
+              <button class="btn btn-danger btn-sm" onclick="globalCaseFlow.setSuspectTag('{{ s.id }}', 'CRITICAL')" title="Mark as prime culprit">Critical</button>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- Investigation Stack & Backtracking -->
+      <div class="card-panel">
+        <div class="card-header">
+          <div class="card-title">
+            <span>⏮️</span> Investigation Stack
+          </div>
+          <button class="btn btn-outline btn-sm" onclick="globalCaseFlow.backtrackInvestigation()" title="Pops top lead from Stack in O(1)">
+            UNDO (POP)
+          </button>
+        </div>
+
+        <div id="theoryStackContainer" style="display: flex; flex-direction: column; gap: 0.3rem; max-height: 280px; overflow-y: auto;">
+          <!-- Loaded via JS -->
+        </div>
+
+        <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 1rem; border-top: 1px solid var(--border-subtle); padding-top: 0.5rem; font-family: var(--text-mono);">
+          Stack stores your investigation history. Click 'UNDO (POP)' to backtrack in O(1) time.
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Stage 5 Action Banner -->
+    <div class="dominant-action-banner" id="stage5ActionBanner">
+      <div>
+        <div style="font-size: 0.75rem; color: var(--text-muted); font-family: var(--text-mono); font-weight: 700;">NEXT LEAD</div>
+        <div id="stage5NextLeadText" style="font-size: 0.98rem; font-weight: 700; color: var(--text-primary); margin-top: 2px;">
+          {{ summary.state.next_lead.text }}
+        </div>
+      </div>
+      <button id="stage5ActionBtn" class="btn btn-danger" onclick="globalCaseFlow.advanceToNextStage()">
+        {{ summary.state.next_lead.action_text or summary.state.next_lead.action_label or 'MAKE FINAL ACCUSATION →' }}
+      </button>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       STAGE 6: FINAL ACCUSATION ("WHO DO YOU ACCUSE?")
+       ========================================================================= -->
+  <div class="stage-panel {{ 'active' if summary.state.current_stage == 6 else '' }}" id="stage-panel-6">
+    <div class="narrative-header-card" style="border-left-color: var(--accent-red);">
+      <div class="stage-objective-pill" style="color: var(--accent-red);">STAGE 6 · COURT OF FORENSICS</div>
+      <h2 style="font-size: 1.8rem; color: var(--text-primary); margin-bottom: 0.35rem;">FINAL ACCUSATION</h2>
+      <p style="color: var(--text-secondary); font-size: 0.95rem;">
+        You have traced the network graph, reconstructed the chronological timeline, and recovered the forensic files. Select the perpetrator to submit your final verdict.
+      </p>
+    </div>
+
+    <!-- Candidate Selection Grid -->
+    <div class="card-panel" style="margin-bottom: 1.25rem;">
+      <div style="font-family: var(--text-mono); font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.75rem; font-weight: 700;">
+        SELECT PRIME PERPETRATOR:
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 0.6rem;">
+        {% for s in suspects %}
+        {% if not s.is_victim %}
+        <div class="accusation-candidate" data-id="{{ s.id }}" onclick="globalCaseFlow.selectAccusedSuspect('{{ s.id }}', '{{ s.name }}')">
+          <div style="display: flex; align-items: center; gap: 0.75rem;">
+            <div class="suspect-avatar {{ 'high-risk' if s.risk_score > 70 else '' }}" style="width:36px; height:36px; font-size:0.8rem;">
+              {{ s.avatar_initials }}
+            </div>
+            <div>
+              <div style="font-weight: 700; color: var(--text-primary); font-size: 0.95rem;">{{ s.name }}</div>
+              <div style="font-size: 0.75rem; color: var(--text-muted);">{{ s.role }} · Risk: {{ s.risk_score }}%</div>
+            </div>
+          </div>
+          <span class="select-indicator" style="font-family: var(--text-mono); font-size: 0.75rem; color: var(--text-muted);">SELECT →</span>
+        </div>
+        {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Selection Confirmation Banner -->
+    <div id="accusationSelectionBanner" style="display: none; background: var(--bg-inset); border: 1px solid var(--border-primary); border-left: 4px solid var(--accent-red); border-radius: var(--radius-sm); padding: 1.25rem; margin-bottom: 1.5rem;">
+      <!-- Populated dynamically on selection -->
+    </div>
+
+    <!-- Submit Button -->
+    <div style="text-align: center;">
+      <button id="submitAccusationBtn" class="btn btn-danger" onclick="globalCaseFlow.submitFinalAccusation()" style="font-size: 1.2rem; padding: 1rem 3.5rem; opacity: 0.5; cursor: not-allowed;" disabled>
+        SUBMIT ACCUSATION
+      </button>
+    </div>
+  </div>
+
+</div>
+
+<!-- =========================================================================
+     MODALS: SUSPECT INSPECTION & ACCUSATION FEEDBACK
+     ========================================================================= -->
+
+<!-- Suspect Focused Drawer Modal -->
+<div class="modal-overlay" id="suspectDetailModal">
+  <div class="modal-content">
+    <button class="modal-close" onclick="globalCaseFlow.closeSuspectModal()">&times;</button>
+    <div style="margin-bottom: 1rem; border-bottom: 1px solid var(--border-subtle); padding-bottom: 0.5rem;">
+      <h2 id="suspectModalName" style="color: var(--text-primary); font-size: 1.3rem;">Suspect Dossier</h2>
+      <div id="suspectModalRole" style="font-size: 0.85rem; color: var(--accent-cyan); font-weight: 600;"></div>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 0.85rem; font-size: 0.88rem; margin-bottom: 1.25rem;">
+      <div>
+        <div style="font-family: var(--text-mono); font-size: 0.72rem; color: var(--text-muted); margin-bottom: 2px;">LAST KNOWN LOCATION</div>
+        <div id="suspectModalLocation" style="color: var(--text-primary); font-weight: 600;"></div>
+      </div>
+
+      <div>
+        <div style="font-family: var(--text-mono); font-size: 0.72rem; color: var(--text-muted); margin-bottom: 2px;">OFFICIAL STATEMENT</div>
+        <div id="suspectModalStatement" style="color: var(--text-secondary); background: var(--bg-inset); padding: 0.75rem; border-radius: var(--radius-xs); font-style: italic; line-height: 1.5;"></div>
+      </div>
+
+      <div>
+        <div style="font-family: var(--text-mono); font-size: 0.72rem; color: var(--text-muted); margin-bottom: 2px;">KNOWN NETWORK CONNECTIONS</div>
+        <div id="suspectModalConnections" style="color: var(--text-secondary); background: var(--bg-inset); padding: 0.75rem; border-radius: var(--radius-xs);"></div>
+      </div>
+
+      <div id="suspectContradictionHighlight" style="background: rgba(185, 28, 28, 0.1); border: 1px solid var(--accent-red); padding: 0.85rem; border-radius: var(--radius-xs);">
+        <div style="font-family: var(--text-mono); font-size: 0.72rem; color: var(--accent-red); font-weight: 800; margin-bottom: 2px;">⚠️ ALIBI CONTRADICTION DETECTED</div>
+        <div id="suspectModalEvidence" style="color: var(--text-primary); font-size: 0.85rem; line-height: 1.5;"></div>
+      </div>
+    </div>
+
+    <!-- Suspect Drawer Action & Next Lead -->
+    <div style="border-top: 1px solid var(--border-subtle); padding-top: 1rem;">
+      <div style="font-family: var(--text-mono); font-size: 0.72rem; color: var(--accent-cyan); margin-bottom: 4px; font-weight: 800;">INVESTIGATION ACTION</div>
+      <p id="suspectModalNextLeadText" style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.75rem;"></p>
+      <button id="suspectModalNextLeadBtn" class="btn btn-primary btn-sm" style="display: none;"></button>
+    </div>
+  </div>
+</div>
+
+<!-- Accusation Contradiction Modal -->
+<div class="modal-overlay" id="accusationContradictionModal">
+  <div class="modal-content" style="border-left: 4px solid var(--accent-amber);">
+    <div style="margin-bottom: 1rem;">
+      <div style="font-family: var(--text-mono); font-size: 0.75rem; color: var(--accent-amber); font-weight: 800; margin-bottom: 2px;">⚠️ THEORY CONTRADICTION</div>
+      <h2 style="color: var(--text-primary); font-size: 1.3rem;">The Evidence Does Not Support This Accusation</h2>
+    </div>
+    <p id="contradictionReasonText" style="font-size: 0.95rem; line-height: 1.6; color: var(--text-secondary); margin-bottom: 1.5rem;">
+      This suspect's verified alibi places them elsewhere at the time of the theft.
+    </p>
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
+      <span style="font-family: var(--text-mono); font-size: 0.75rem; color: var(--accent-amber);">HINT: Check who was at Door #3 at 19:38 & Terminal 04 at 19:42.</span>
+      <button class="btn btn-primary" onclick="globalCaseFlow.closeContradictionModal()">
+        RETURN TO INVESTIGATION →
+      </button>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/network.js') }}"></script>
+<script src="{{ url_for('static', filename='js/case_flow.js') }}"></script>
+{% endblock %}

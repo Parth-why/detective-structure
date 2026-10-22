@@ -1,0 +1,54 @@
+{
+  "feeds": [
+    {
+      "camera_id": "CAM_01",
+      "code": "CAM-A",
+      "label": "Apex Lab 3rd Floor Corridor",
+      "status": "LIVE",
+      "timestamp": "19:35:10",
+      "notes": "Door #3 visible. Keycard scanner green flash recorded at 19:38.",
+      "security_level": "RESTRICTED",
+      "color_hex": "#00f0ff"
+    },
+    {
+      "camera_id": "CAM_02",
+      "code": "CAM-B",
+      "label": "Server Room A & B Hallway",
+      "status": "LIVE",
+      "timestamp": "20:06:44",
+      "notes": "Sam Verma observed entering with laptop bag at 20:04.",
+      "security_level": "HIGH",
+      "color_hex": "#bd00ff"
+    },
+    {
+      "camera_id": "CAM_03",
+      "code": "CAM-C",
+      "label": "Rear Fire Escape Stairwell",
+      "status": "RECORDED",
+      "timestamp": "19:47:22",
+      "notes": "CRITICAL: Hooded figure in navy jacket with orange trim rushing down stairs.",
+      "security_level": "ALERT",
+      "color_hex": "#ff3366"
+    },
+    {
+      "camera_id": "CAM_04",
+      "code": "CAM-D",
+      "label": "Central Library North Breezeway",
+      "status": "LIVE",
+      "timestamp": "19:51:05",
+      "notes": "Subject enters 4th-floor study wing from side walkway.",
+      "security_level": "MEDIUM",
+      "color_hex": "#ffb800"
+    },
+    {
+      "camera_id": "CAM_05",
+      "code": "CAM-E",
+      "label": "Campus West Perimeter Gate",
+      "status": "LIVE",
+      "timestamp": "20:15:30",
+      "notes": "Officer Karan Joshi on scheduled patrol route.",
+      "security_level": "LOW",
+      "color_hex": "#00ff9d"
+    }
+  ]
+}

@@ -1,0 +1,105 @@
+{
+  "name": "CASE_001_ROOT",
+  "type": "case_root",
+  "data": {
+    "title": "CASE 001: THE VANISHING FILE",
+    "status": "OPEN",
+    "lead_investigator": "Detective Officer"
+  },
+  "children": [
+    {
+      "name": "PEOPLE_BRANCH",
+      "type": "category",
+      "data": { "category": "People & Alibis", "count": 13 },
+      "children": [
+        {
+          "name": "PRIMARY_SUSPECTS",
+          "type": "subcategory",
+          "data": { "description": "Persons with digital or physical access to Apex Bio-Lab" },
+          "children": [
+            { "name": "SUSPECT_RYAN_MEHTA", "type": "clue", "data": { "id": "ryan_mehta", "role": "Senior Research Fellow", "risk": 92 } },
+            { "name": "SUSPECT_SAM_VERMA", "type": "clue", "data": { "id": "sam_verma", "role": "Lab SysAdmin", "risk": 84 } },
+            { "name": "SUSPECT_ARJUN_KULKARNI", "type": "clue", "data": { "id": "arjun_kulkarni", "role": "Postdoc Fellow", "risk": 68 } },
+            { "name": "SUSPECT_AISHA_SHAH", "type": "clue", "data": { "id": "aisha_shah", "role": "Lead Data Scientist", "risk": 45 } }
+          ]
+        },
+        {
+          "name": "WITNESSES_AND_VICTIM",
+          "type": "subcategory",
+          "data": { "description": "Victim, security personnel, and corroborated witnesses" },
+          "children": [
+            { "name": "VICTIM_MAYA_RAO", "type": "clue", "data": { "id": "maya_rao", "role": "Principal Investigator" } },
+            { "name": "WITNESS_NEHA_PATIL", "type": "clue", "data": { "id": "neha_patil", "role": "Lab Assistant" } },
+            { "name": "WITNESS_NISHA_KAPOOR", "type": "clue", "data": { "id": "nisha_kapoor", "role": "Head Librarian" } },
+            { "name": "OFFICER_KARAN_JOSHI", "type": "clue", "data": { "id": "karan_joshi", "role": "Security Officer" } }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "DIGITAL_EVIDENCE_BRANCH",
+      "type": "category",
+      "data": { "category": "Digital Traces & Cyber Forensics", "count": 6 },
+      "children": [
+        {
+          "name": "SERVER_AND_NETWORK_LOGS",
+          "type": "subcategory",
+          "data": { "description": "Kernel event captures, network flows, and SSH tunnels" },
+          "children": [
+            { "name": "EVIDENCE_1061_TERMINAL_LOG", "type": "clue", "data": { "id": 1061, "title": "Lab Terminal 04 Exfiltration Log" } },
+            { "name": "EVIDENCE_1160_SSH_TUNNEL", "type": "clue", "data": { "id": 1160, "title": "Library Reverse SSH Tunnel Trace" } },
+            { "name": "EVIDENCE_1105_SWITCH_LOG", "type": "clue", "data": { "id": 1105, "title": "Server Room B Power Surge" } }
+          ]
+        },
+        {
+          "name": "ENCRYPTED_MESSAGES_AND_CRYPTO",
+          "type": "subcategory",
+          "data": { "description": "P2P darkweb intercepts and cryptocurrency contracts" },
+          "children": [
+            { "name": "EVIDENCE_1020_PAYOUT_CHAT", "type": "clue", "data": { "id": 1020, "title": "DarkWeb Payout Terms Intercept" } },
+            { "name": "EVIDENCE_1120_SAM_SIGNAL", "type": "clue", "data": { "id": 1120, "title": "Encrypted P2P Bridge Session" } },
+            { "name": "EVIDENCE_1190_ESCROW_CONTRACT", "type": "clue", "data": { "id": 1190, "title": "Swiss Crypto Escrow Contract #XMR-992" } }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "PHYSICAL_EVIDENCE_BRANCH",
+      "type": "category",
+      "data": { "category": "Surveillance, Keycards & Physical Traces", "count": 6 },
+      "children": [
+        {
+          "name": "CCTV_SURVEILLANCE",
+          "type": "subcategory",
+          "data": { "description": "Video feeds from cameras 01, 04, and campus cafe" },
+          "children": [
+            { "name": "EVIDENCE_1047_FIRE_STAIRS_CCTV", "type": "clue", "data": { "id": 1047, "title": "CCTV Camera 04: Rear Fire Stairs" } },
+            { "name": "EVIDENCE_1035_CAFE_CCTV", "type": "clue", "data": { "id": 1035, "title": "Costa Cafe CCTV & Cashier Receipt" } }
+          ]
+        },
+        {
+          "name": "ACCESS_CARDS_AND_RECEIPTS",
+          "type": "subcategory",
+          "data": { "description": "Badge scans and point-of-sale timestamps" },
+          "children": [
+            { "name": "EVIDENCE_1075_BADGE_SCAN", "type": "clue", "data": { "id": 1075, "title": "Door #3 Keycard Access Record" } },
+            { "name": "EVIDENCE_1052_CAFETERIA_SCAN", "type": "clue", "data": { "id": 1052, "title": "Cafeteria Register Scan #890" } },
+            { "name": "EVIDENCE_1148_GUEST_HOUSE_BILL", "type": "clue", "data": { "id": 1148, "title": "Guest House Dining Hall Receipt" } }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "LOCATIONS_BRANCH",
+      "type": "category",
+      "data": { "category": "Physical Crime Scene & Hotspots", "count": 5 },
+      "children": [
+        { "name": "LOC_APEX_BIO_LAB", "type": "clue", "data": { "location": "Apex Bio-Lab, 3rd Floor" } },
+        { "name": "LOC_CENTRAL_LIBRARY", "type": "clue", "data": { "location": "Central Library 4th Floor" } },
+        { "name": "LOC_SERVER_ROOMS", "type": "clue", "data": { "location": "Server Rooms A & B" } },
+        { "name": "LOC_COSTA_CAFE", "type": "clue", "data": { "location": "Costa Cafe, Campus West" } },
+        { "name": "LOC_FIRE_ESCAPE_STAIRS", "type": "clue", "data": { "location": "Research Block 4 Rear Stairs" } }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,226 @@
+{% extends "base.html" %}
+
+{% block title %}Case Board & Theory — Social Detective{% endblock %}
+
+{% block content %}
+<div style="display: flex; flex-direction: column; gap: 1.5rem;">
+
+  <!-- Breadcrumb & Header -->
+  <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+    <div>
+      <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem;">
+        <a href="/case" style="color: var(--accent-cyan); text-decoration: none; font-size: 0.8rem; font-family: var(--text-mono);">← Playthrough</a>
+        <span style="color: var(--text-muted);">/</span>
+        <span style="color: var(--text-muted); font-size: 0.8rem; font-family: var(--text-mono);">Live Theory & Surveillance</span>
+      </div>
+      <h1 style="font-family: var(--font-main); font-size: 1.8rem; color: var(--text-primary); font-weight: 800; display: flex; align-items: center; gap: 0.5rem;">
+        <span>📋</span> Case Board, Theory & Accusation
+      </h1>
+      <p style="color: var(--text-secondary); font-size: 0.9rem;">
+        Construct your prosecution case. Use <strong>Stack Backtracking (LIFO)</strong> to retrace your steps and formulate your final accusation.
+      </p>
+    </div>
+
+    <div style="display: flex; gap: 0.5rem;">
+      <button class="btn btn-outline btn-sm" onclick="openExplainModal('stack')">Stack Viva 🎓</button>
+      <button class="btn btn-danger btn-sm" onclick="document.getElementById('accusationCard').scrollIntoView({behavior:'smooth'})">
+        <span>⚖️</span> Go to Accusation
+      </button>
+    </div>
+  </div>
+
+  <!-- Main 2-Column Board (Left: Clue Board / Right: Stack + CCTV) -->
+  <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem;">
+
+    <!-- Left: Theory Board Grid -->
+    <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+
+      <!-- Suspects Theory Section -->
+      <div class="card-panel">
+        <div class="card-header">
+          <div class="card-title">
+            <span class="icon">👥</span> Suspect Theory Board
+          </div>
+          <span class="dsa-badge">TAG ENTITIES</span>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 0.75rem;">
+          {% for suspect in suspects %}
+          <div style="
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-sm);
+            padding: 0.75rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+            box-shadow: var(--shadow-sm);
+          " id="theory-suspect-{{ suspect.id }}">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <strong style="color: var(--text-primary); font-size: 0.85rem;">{{ suspect.name }}</strong>
+              <span style="font-size: 0.7rem; color: {{ 'var(--accent-red)' if suspect.risk_score > 70 else 'var(--accent-cyan)' }}; font-family: var(--text-mono); font-weight: 700;">
+                {{ suspect.risk_score }}/100
+              </span>
+            </div>
+            <div style="font-size: 0.75rem; color: var(--text-muted);">{{ suspect.role }}</div>
+            <div style="display: flex; gap: 0.3rem; margin-top: auto;">
+              <button class="btn btn-outline btn-sm" style="font-size: 0.65rem; padding: 2px 6px; flex: 1;" onclick="toggleTheory('suspect', '{{ suspect.id }}', 'RELEVANT')">
+                🎯 Relevant
+              </button>
+              <button class="btn btn-outline btn-sm" style="font-size: 0.65rem; padding: 2px 6px; flex: 1;" onclick="toggleTheory('suspect', '{{ suspect.id }}', 'CLEARED')">
+                🛡️ Clear
+              </button>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- Critical Evidence Theory Section -->
+      <div class="card-panel">
+        <div class="card-header">
+          <div class="card-title">
+            <span class="icon">🔬</span> Forensics Status Board
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 0.75rem;">
+          {% for ev in evidence_list[:8] %}
+          <div style="
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-sm);
+            padding: 0.75rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+            box-shadow: var(--shadow-sm);
+          " id="theory-ev-{{ ev.id }}">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <strong style="color: var(--accent-cyan); font-size: 0.85rem;">#{{ ev.id }}: {{ ev.title }}</strong>
+            </div>
+            <p style="font-size: 0.75rem; color: var(--text-secondary); line-height: 1.3;">
+              {{ ev.description[:90] }}...
+            </p>
+            <div style="display: flex; gap: 0.3rem; margin-top: auto;">
+              <button class="btn btn-cyan btn-sm" style="font-size: 0.65rem; padding: 2px 6px; flex: 1;" onclick="toggleTheory('evidence', '{{ ev.id }}', 'CRITICAL')">
+                ⭐ Mark Critical
+              </button>
+              <button class="btn btn-outline btn-sm" style="font-size: 0.65rem; padding: 2px 6px; flex: 1;" onclick="toggleTheory('evidence', '{{ ev.id }}', 'DISMISSED')">
+                Dismiss
+              </button>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- Final Accusation Terminal Card -->
+      <div class="card-panel glow-purple" id="accusationCard" style="border-color: var(--accent-purple);">
+        <div class="card-header">
+          <div class="card-title" style="color: var(--accent-purple); font-weight: 800;">
+            <span>⚖️</span> FINAL ACCUSATION TERMINAL: WHO STOLE THE FILE?
+          </div>
+          <span class="dsa-badge" style="background: rgba(109,40,217,0.12); color: var(--accent-purple); font-weight: 700;">CASE RESOLUTION</span>
+        </div>
+
+        <p style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 1rem;">
+          Select the prime culprit based on the social graph connections, timeline alibi contradictions, and digital forensics.
+        </p>
+
+        <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
+          <select id="accusedSuspectSelect" style="flex: 1; background: var(--bg-surface); border: 1px solid var(--border-primary); color: var(--text-primary); padding: 0.65rem 1rem; border-radius: var(--radius-sm); font-size: 0.9rem; outline: none;">
+            <option value="">-- Select Prime Culprit --</option>
+            {% for s in suspects %}
+            {% if not s.is_victim %}
+            <option value="{{ s.id }}">{{ s.name }} ({{ s.role }}) — Risk: {{ s.risk_score }}</option>
+            {% endif %}
+            {% endfor %}
+          </select>
+
+          <button class="btn btn-danger" onclick="submitAccusation()" style="padding: 0.65rem 1.75rem; font-size: 0.95rem;">
+            <span>🚨</span> SUBMIT ACCUSATION
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Right: Investigation Stack & CCTV Surveillance Monitor -->
+    <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+
+      <!-- Investigation Stack (LIFO) Card -->
+      <div class="card-panel">
+        <div class="card-header">
+          <div class="card-title">
+            <span class="icon">⏮️</span> Investigation Stack
+          </div>
+          <button class="btn btn-cyan btn-sm" onclick="backtrackInvestigation()">
+            <span>◀</span> BACKTRACK (POP)
+          </button>
+        </div>
+
+        <div id="investigationStackList" class="stack-display" style="min-height: 200px;">
+          <!-- Populated via JS -->
+        </div>
+
+        <div style="font-size: 0.7rem; color: var(--text-muted); font-family: var(--text-mono); margin-top: 0.5rem;">
+          LIFO Principle: Pushing new leads onto stack; Backtrack pops the top element in O(1) time.
+        </div>
+      </div>
+
+      <!-- CCTV Circular Queue Feeds Card -->
+      <div class="card-panel">
+        <div class="card-header">
+          <div class="card-title">
+            <span class="icon">📹</span> Live CCTV Monitor
+          </div>
+          <button class="btn btn-cyan btn-sm" onclick="cycleCCTVFeed()">
+            <span>🔄</span> Rotate
+          </button>
+        </div>
+
+        <div style="background: #000; border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 0.85rem;">
+          <div id="cctvCameraLabel" style="font-family: var(--text-mono); font-weight: 800; color: var(--accent-cyan); font-size: 0.85rem; margin-bottom: 0.3rem;">
+            CAM-A: Apex Lab Corridor
+          </div>
+          <p id="cctvNotes" style="font-size: 0.75rem; color: var(--text-secondary); min-height: 35px;">
+            Door #3 visible. Badge reader green scan recorded at 19:38.
+          </p>
+          <div id="cctvTimestamp" style="font-family: var(--text-mono); font-size: 0.7rem; color: var(--accent-red); margin-top: 0.4rem;">
+            REC: 19:35:10
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- Accusation Result Modal -->
+  <div class="modal-overlay" id="accusationResultModal">
+    <div class="modal-content" style="text-align: center;">
+      <h2 id="accusationResultTitle" style="color: var(--accent-cyan); margin-bottom: 1rem; font-size: 1.4rem;"></h2>
+      <p id="accusationResultMsg" style="color: var(--text-secondary); font-size: 0.95rem; line-height: 1.6; margin-bottom: 1.5rem;"></p>
+      <div style="display: flex; justify-content: center; gap: 1rem;">
+        <button id="accusationActionBtn" class="btn btn-primary" style="padding: 0.75rem 2rem;">
+          OK
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/investigation.js') }}"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  // Fetch initial stack state
+  fetch('/api/stack/state')
+    .then(res => res.json())
+    .then(data => updateStackUI(data));
+});
+</script>
+{% endblock %}
