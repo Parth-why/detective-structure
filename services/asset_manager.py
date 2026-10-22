@@ -17,10 +17,16 @@ class AssetManagerService:
 
     def _ensure_asset_directories(self):
         """Ensure standard asset subdirectories exist without removing any user files."""
-        subdirs = ["backgrounds", "characters", "evidence", "icons", "textures", "cursors"]
-        os.makedirs(self.assets_dir, exist_ok=True)
-        for s in subdirs:
-            os.makedirs(os.path.join(self.assets_dir, s), exist_ok=True)
+        try:
+            subdirs = ["backgrounds", "characters", "evidence", "icons", "textures", "cursors"]
+            if not os.path.exists(self.assets_dir):
+                os.makedirs(self.assets_dir, exist_ok=True)
+            for s in subdirs:
+                target = os.path.join(self.assets_dir, s)
+                if not os.path.exists(target):
+                    os.makedirs(target, exist_ok=True)
+        except OSError:
+            pass
 
     def scan_assets(self):
         """

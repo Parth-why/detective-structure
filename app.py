@@ -133,8 +133,10 @@ def download_report():
     """Download the academic project summary PDF report."""
     pdf_path = os.path.join(os.path.dirname(__file__), "Social_Detective_Project_Report.pdf")
     if not os.path.exists(pdf_path):
-        from generate_report_pdf import build_pdf
-        build_pdf(pdf_path)
+        pdf_path = os.path.join("/tmp", "Social_Detective_Project_Report.pdf")
+        if not os.path.exists(pdf_path):
+            from generate_report_pdf import build_pdf
+            build_pdf(pdf_path)
     return send_file(pdf_path, as_attachment=True, download_name="Social_Detective_Project_Report.pdf")
 
 @app.route("/report.pdf")
@@ -142,8 +144,10 @@ def view_report_pdf():
     """View the academic project summary PDF in browser."""
     pdf_path = os.path.join(os.path.dirname(__file__), "Social_Detective_Project_Report.pdf")
     if not os.path.exists(pdf_path):
-        from generate_report_pdf import build_pdf
-        build_pdf(pdf_path)
+        pdf_path = os.path.join("/tmp", "Social_Detective_Project_Report.pdf")
+        if not os.path.exists(pdf_path):
+            from generate_report_pdf import build_pdf
+            build_pdf(pdf_path)
     return send_file(pdf_path, mimetype="application/pdf")
 
 
