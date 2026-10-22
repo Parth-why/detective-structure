@@ -24,6 +24,8 @@ engine = CaseEngine()
 # ==========================================
 
 @app.route("/")
+@app.route("/api/index")
+@app.route("/api/index.py")
 def index():
     """Landing Page showcasing cyber noir aesthetics & project features."""
     summary = engine.get_case_summary()
